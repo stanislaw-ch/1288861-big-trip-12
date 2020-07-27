@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
 * Студент: [Stanislaw Chirko](https://up.htmlacademy.ru/ecmascript/12/user/1288861).
-* Наставник: `Неизвестно`.
+* Наставник: [Всеволод Артемьев](https://htmlacademy.ru/profile/id459331).
 
 ---
 
