@@ -1,7 +1,7 @@
 "use strict";
 
 const TASK_COUNT = 3;
-//Информация о поездке
+// Информация о поездке
 const createSiteTripInfoTemplate = () => {
   return (
     `<section class="trip-main__trip-info  trip-info">
@@ -13,7 +13,7 @@ const createSiteTripInfoTemplate = () => {
   </section>`
   );
 };
-//Информация о стоимости
+// Информация о стоимости
 const createSiteTripCostTemplate = () => {
   return (
     `<p class="trip-info__cost">
@@ -21,7 +21,7 @@ const createSiteTripCostTemplate = () => {
     </p>`
   );
 };
-//Меню проекта
+// Меню проекта
 const createSiteMenuTemplate = () => {
   return (
     `<nav class="trip-controls__trip-tabs  trip-tabs">
@@ -30,7 +30,7 @@ const createSiteMenuTemplate = () => {
   </nav>`
   );
 };
-//Фильтр проекта
+// Фильтр проекта
 const createSiteFilterTemplate = () => {
   return (
     `<form class="trip-filters" action="#" method="get">
@@ -53,7 +53,7 @@ const createSiteFilterTemplate = () => {
   </form>`
   );
 };
-//Сортировка проекта
+// Сортировка проекта
 const createSiteSortTemplate = () => {
   return (
     `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
@@ -88,14 +88,14 @@ const createSiteSortTemplate = () => {
   </form>`
   );
 };
-//Группировка/список по дням проекта
+// Группировка/список по дням проекта
 const createSiteTripDaysListTemplate = () => {
   return (
     `<ul class="trip-days">
     </ul>`
   );
 };
-//День поездки
+// День поездки
 const createSiteTripDayItemTemplate = () => {
   return (
     `<li class="trip-days__item  day">
@@ -106,14 +106,14 @@ const createSiteTripDayItemTemplate = () => {
     </li>`
   );
 };
-//Список событий поездки
+// Список событий поездки
 const createSiteTripEventsListTemplate = () => {
   return (
     `<ul class="trip-events__list">
     </ul>`
   );
 };
-//Событие поездки
+// Событие поездки
 const createSiteTripEventsItemTemplate = () => {
   return (
     `<li class="trip-events__item">
@@ -152,7 +152,7 @@ const createSiteTripEventsItemTemplate = () => {
   </li>`
   );
 };
-//Добавление события
+// Добавление события
 const createSiteTripEventsAddTemplate = () => {
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -272,33 +272,33 @@ const render = (container, template, place) => {
 
 const siteHeaderElement = document.querySelector(`.page-header`);
 
-//Информация о поездке
+// Информация о поездке
 const siteTrip = siteHeaderElement.querySelector(`.trip-main`);
 render(siteTrip, createSiteTripInfoTemplate(), `afterbegin`);
-//Информация о стоимости
+// Информация о стоимости
 const siteTripCost = siteHeaderElement.querySelector(`.trip-main__trip-info`);
 render(siteTripCost, createSiteTripCostTemplate(), `beforeend`);
-//Меню проекта
+// Меню проекта
 const siteMenu = siteHeaderElement.querySelector(`.trip-main__trip-controls h2`);
 render(siteMenu, createSiteMenuTemplate(), `afterend`);
-//Фильтр проекта
+// Фильтр проекта
 const siteFilter = siteHeaderElement.querySelector(`.trip-main__trip-controls`);
 render(siteFilter, createSiteFilterTemplate(), `beforeend`);
-//Сортировка проекта
+// Сортировка проекта
 const siteMainElement = document.querySelector(`.page-body__page-main`);
 const siteTripSort = siteMainElement.querySelector(`.trip-events h2`);
 render(siteTripSort, createSiteSortTemplate(), `afterend`);
 render(siteTripSort, createSiteTripEventsAddTemplate(), `afterend`);
-//Группировка/список по дням проекта
+// Группировка/список по дням проекта
 const siteTripFormSort = document.querySelector(`.trip-events__trip-sort`);
 render(siteTripFormSort, createSiteTripDaysListTemplate(), `afterend`);
-//День поездки
+// День поездки
 const siteTripDaysList = document.querySelector(`.trip-days`);
 render(siteTripDaysList, createSiteTripDayItemTemplate(), `afterbegin`);
-//Список событий поездки
+// Список событий поездки
 const siteTripDayItem = document.querySelector(`.trip-days__item`);
 render(siteTripDayItem, createSiteTripEventsListTemplate(), `beforeend`);
-//Событие поездки
+// Событие поездки
 const siteTripEventsList = document.querySelector(`.trip-events__list`);
 for (let i = 0; i < TASK_COUNT; i++) {
   render(siteTripEventsList, createSiteTripEventsItemTemplate(), `afterbegin`);
