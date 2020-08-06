@@ -8,8 +8,11 @@ import {createSiteTripDayItemTemplate} from "./view/trip-day-item.js";
 import {createSiteTripEventsListTemplate} from "./view/trip-events-list.js";
 import {createSiteTripEventsItemTemplate} from "./view/trip-events-item.js";
 import {createSiteTripEventsAddTemplate} from "./view/trip-events-add.js";
+import {generateTripPoint} from "./mock/trip-point.js";
 
-const TASK_COUNT = 3;
+const POINT_COUNT = 10;
+
+const tripPoint = new Array(POINT_COUNT).fill().map(generateTripPoint);
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -37,7 +40,6 @@ render(siteFilter, createSiteFilterTemplate(), `beforeend`);
 const siteMainElement = document.querySelector(`.page-body__page-main`);
 const siteTripSort = siteMainElement.querySelector(`.trip-events h2`);
 render(siteTripSort, createSiteSortTemplate(), `afterend`);
-render(siteTripSort, createSiteTripEventsAddTemplate(), `afterend`);
 
 // Группировка/список по дням проекта
 const siteTripFormSort = document.querySelector(`.trip-events__trip-sort`);
@@ -51,8 +53,12 @@ render(siteTripDaysList, createSiteTripDayItemTemplate(), `afterbegin`);
 const siteTripDayItem = document.querySelector(`.trip-days__item`);
 render(siteTripDayItem, createSiteTripEventsListTemplate(), `beforeend`);
 
-// Событие поездки
+
+// Добавление - редактирование поездки
 const siteTripEventsList = document.querySelector(`.trip-events__list`);
-for (let i = 0; i < TASK_COUNT; i++) {
-  render(siteTripEventsList, createSiteTripEventsItemTemplate(), `afterbegin`);
+render(siteTripEventsList, createSiteTripEventsAddTemplate(tripPoint[0]), `afterbegin`);
+
+// Точки поездки
+for (let i = 1; i < POINT_COUNT; i++) {
+  render(siteTripEventsList, createSiteTripEventsItemTemplate(tripPoint[i]), `beforeend`);
 }
