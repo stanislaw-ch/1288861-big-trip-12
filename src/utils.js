@@ -22,7 +22,7 @@ export const getRandomInteger = (from = 0, to = 1) => {
 export const getRandomFloat = (min, max) => Math.floor(min + Math.random() * (max - min + 1));
 
 // Форматирует номер дня если он меньше нуля, добавляя в начало "0"
-export const getFormattedDaYNumber = (num) => (num < 10) ? `0${num}` : num;
+export const getFormattedDayNumber = (num) => (num < 10) ? `0${num}` : num;
 
 /**
  * Возвращает время в формате час мин для начала и окончания события в точке
@@ -31,8 +31,8 @@ export const getFormattedDaYNumber = (num) => (num < 10) ? `0${num}` : num;
  * @return {object}
  */
 export const getFormattedTime = (date) => {
-  const hours = getFormattedDaYNumber(date.getHours());
-  const min = getFormattedDaYNumber(date.getMinutes());
+  const hours = getFormattedDayNumber(date.getHours());
+  const min = getFormattedDayNumber(date.getMinutes());
 
   return `${hours}:${min}`;
 };
@@ -47,7 +47,7 @@ const getHoursMinInterval = (minutes) => {
   const durationInHours = Math.floor(minutes / 60);
   const durationInMin = minutes - durationInHours * 60;
 
-  return `${getFormattedDaYNumber(durationInHours)}H ${getFormattedDaYNumber(durationInMin)}M`;
+  return `${getFormattedDayNumber(durationInHours)}H ${getFormattedDayNumber(durationInMin)}M`;
 };
 
 /**
@@ -61,7 +61,7 @@ export const getDurationInterval = (startTime, endTime) => {
   const durationInMin = Math.floor((endTime.getTime() - startTime.getTime()) / 60000);
 
   if (durationInMin < 60) {
-    return `${getFormattedDaYNumber(durationInMin)}M`;
+    return `${getFormattedDayNumber(durationInMin)}M`;
   }
 
   const durationInHours = durationInMin / 60;
@@ -70,5 +70,16 @@ export const getDurationInterval = (startTime, endTime) => {
   }
 
   const durationInDays = Math.floor(durationInHours / 24);
-  return `${getFormattedDaYNumber(durationInDays)}D ${getHoursMinInterval(durationInMin - durationInDays * 60 * 24)}`;
+  return `${getFormattedDayNumber(durationInDays)}D ${getHoursMinInterval(durationInMin - durationInDays * 60 * 24)}`;
+};
+
+/**
+ * Возвращает дату в формате день, месяц, год
+ * @param {object} date
+ *
+ * @return {object}
+ */
+export const getDayFormat = (date) => {
+  const dateString = date.toDateString();
+  return `${dateString.slice(8, 11)} ${dateString.slice(4, 7)} ${dateString.slice(13, 15)}`;
 };

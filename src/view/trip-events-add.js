@@ -1,6 +1,22 @@
-// Добавление события
+import {getFormattedDayNumber} from '../utils.js';
+
 export const createSiteTripEventsAddTemplate = (tripPoint) => {
-  const {description, photos} = tripPoint;
+  const {eventsTypes, destination, description, photos, price, offers} = tripPoint;
+  const {startTime, endTime} = tripPoint.time;
+
+  const typePoint = eventsTypes.type;
+  const typePicture = typePoint.toLowerCase();
+
+  /**
+   * Возвращает дату в формате день, месяц, год
+   * @param {object} date
+   *
+   * @return {object}
+   */
+  const getTimeFormat = (date) => {
+    const dateString = date.toDateString();
+    return `${getFormattedDayNumber(date.getDay() + 1)}/${getFormattedDayNumber(date.getMonth() + 1)}/${dateString.slice(13, 15)} ${getFormattedDayNumber(date.getHours() + 1)}:${getFormattedDayNumber(date.getMinutes() + 1)}`;
+  };
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -8,7 +24,7 @@ export const createSiteTripEventsAddTemplate = (tripPoint) => {
       <div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle-1">
           <span class="visually-hidden">Choose event type</span>
-          <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
+          <img class="event__type-icon" width="17" height="17" src="img/icons/${typePicture}.png" alt="Event type icon">
         </label>
         <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -75,9 +91,9 @@ export const createSiteTripEventsAddTemplate = (tripPoint) => {
 
       <div class="event__field-group  event__field-group--destination">
         <label class="event__label  event__type-output" for="event-destination-1">
-          Flight to
+          ${typePoint} to
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Geneva" list="destination-list-1">
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1">
         <datalist id="destination-list-1">
           <option value="Amsterdam"></option>
           <option value="Geneva"></option>
@@ -90,12 +106,12 @@ export const createSiteTripEventsAddTemplate = (tripPoint) => {
         <label class="visually-hidden" for="event-start-time-1">
           From
         </label>
-        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="18/03/19 00:00">
+        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${getTimeFormat(startTime)}">
         &mdash;
         <label class="visually-hidden" for="event-end-time-1">
           To
         </label>
-        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="18/03/19 00:00">
+        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${getTimeFormat(endTime)}">
       </div>
 
       <div class="event__field-group  event__field-group--price">
@@ -103,7 +119,7 @@ export const createSiteTripEventsAddTemplate = (tripPoint) => {
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
+        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -114,50 +130,14 @@ export const createSiteTripEventsAddTemplate = (tripPoint) => {
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
         <div class="event__available-offers">
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
-            <label class="event__offer-label" for="event-offer-luggage-1">
-              <span class="event__offer-title">Add luggage</span>
-              &plus;
-              &euro;&nbsp;<span class="event__offer-price">30</span>
-            </label>
-          </div>
-
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
-            <label class="event__offer-label" for="event-offer-comfort-1">
-              <span class="event__offer-title">Switch to comfort class</span>
-              &plus;
-              &euro;&nbsp;<span class="event__offer-price">100</span>
-            </label>
-          </div>
-
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-meal-1" type="checkbox" name="event-offer-meal">
-            <label class="event__offer-label" for="event-offer-meal-1">
-              <span class="event__offer-title">Add meal</span>
-              &plus;
-              &euro;&nbsp;<span class="event__offer-price">15</span>
-            </label>
-          </div>
-
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats-1" type="checkbox" name="event-offer-seats">
-            <label class="event__offer-label" for="event-offer-seats-1">
-              <span class="event__offer-title">Choose seats</span>
-              &plus;
-              &euro;&nbsp;<span class="event__offer-price">5</span>
-            </label>
-          </div>
-
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-1" type="checkbox" name="event-offer-train">
-            <label class="event__offer-label" for="event-offer-train-1">
-              <span class="event__offer-title">Travel by train</span>
-              &plus;
-              &euro;&nbsp;<span class="event__offer-price">40</span>
-            </label>
-          </div>
+          ${offers.map((it) =>`<div class="event__offer-selector">
+          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${it.type}-1" type="checkbox" name="event-offer-${it.type}" checked>
+          <label class="event__offer-label" for="event-offer-${it.type}-1">
+            <span class="event__offer-title">${it.title}</span>
+            &plus;
+            &euro;&nbsp;<span class="event__offer-price">${it.price}</span>
+          </label>
+          </div>`).join(``)}
         </div>
       </section>
 
