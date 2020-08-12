@@ -1,49 +1,17 @@
-import {getRandomFloat, getDayFormat} from '../utils.js';
+import {getRandomFloat, getDayFormat, getDayTemplate} from '../utils.js';
 import {generateTripPoint} from '../mock/trip-point.js';
-import {createSiteTripEventsItemTemplate} from './trip-events-item.js';
-// import {createSiteTripEventsAddTemplate} from './trip-events-add.js';
 
 const POINT_COUNT = getRandomFloat(4, 16);
-// console.log(POINT_COUNT);
 
 export const EVENTS_LIST = new Array(POINT_COUNT).fill().map(generateTripPoint);
-// console.log(EVENTS_LIST);
 
-export const sortDates = Array.from(new Set(EVENTS_LIST
-.sort((elem1, elem2) => elem1.time.startTime > elem2.time.startTime ? 1 : -1)
-.map((it) => getDayFormat(it.time.startTime))));
-
-// console.log(sortDates);
-
-let daysTemplate = ``;
-for (let date of sortDates) {
-  const day = date.slice(0, 2);
-
-  const dayEvents = EVENTS_LIST.filter((it) => {
-    return getDayFormat(it.time.startTime) === date;
-  });
-
-  // console.log(dayEvents.length);
-  // console.log(dayEvents);
-
-  const tripTemplate = (data) => {
-    let tripItem = ``;
-    for (let item of data) {
-      tripItem += createSiteTripEventsItemTemplate(item);
-    }
-    return tripItem;
-  };
-
-  daysTemplate += `
-    <li class="trip-days__item  day">
-      <div class="day__info">
-        <span class="day__counter">${day}</span>
-        <time class="day__date" datetime="2019-03-18">${date.slice(4)}</time>
-      </div>
-      <ul class="trip-events__list">${tripTemplate(dayEvents)}</ul>
-    </li>
-  `;
-}
+export const sortDates = Array.from(
+    new Set(
+        EVENTS_LIST
+            .sort((elem1, elem2) => elem1.time.startTime > elem2.time.startTime ? 1 : -1)
+            .map((it) => getDayFormat(it.time.startTime))
+    )
+);
 
 export const createSiteSortTemplate = () => {
   return (
@@ -78,6 +46,6 @@ export const createSiteSortTemplate = () => {
     <span class="trip-sort__item  trip-sort__item--offers">Offers</span>
   </form>
 
-  <ul class="trip-days">${daysTemplate}</ul>`
+  <ul class="trip-days">${getDayTemplate(EVENTS_LIST, sortDates)}</ul>`
   );
 };

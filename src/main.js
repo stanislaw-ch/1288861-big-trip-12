@@ -41,8 +41,3 @@ render(siteTripDayItem, createSiteTripEventsListTemplate(), `beforeend`);
 // Добавление - редактирование поездки
 const siteTripEventsList = document.querySelector(`.trip-events__list`);
 render(siteTripEventsList, createSiteTripEventsAddTemplate(EVENTS_LIST[0]), `afterbegin`);
-
-// Точки поездки
-// for (let i = 1; i < POINT_COUNT; i++) {
-//   render(siteTripEventsList, createSiteTripEventsItemTemplate(tripPoints[i]), `beforeend`);
-// }

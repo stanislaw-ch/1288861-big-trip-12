@@ -1,3 +1,5 @@
+import {createSiteTripEventsItemTemplate} from './view/trip-events-item.js';
+
 /**
  * Возвращает случайное число
  * @param {number} from
@@ -82,4 +84,34 @@ export const getDurationInterval = (startTime, endTime) => {
 export const getDayFormat = (date) => {
   const dateString = date.toDateString();
   return `${dateString.slice(8, 11)} ${dateString.slice(4, 7)} ${dateString.slice(13, 15)}`;
+};
+
+export const getDayTemplate = (pointsData, sortDates) => {
+  let daysTemplate = ``;
+  for (let date of sortDates) {
+    const day = date.slice(0, 2);
+
+    const dayEvents = pointsData.filter((it) => {
+      return getDayFormat(it.time.startTime) === date;
+    });
+
+    const tripTemplate = (data) => {
+      let tripItem = ``;
+      for (let item of data) {
+        tripItem += createSiteTripEventsItemTemplate(item);
+      }
+      return tripItem;
+    };
+
+    daysTemplate = daysTemplate + `
+    <li class="trip-days__item  day">
+      <div class="day__info">
+        <span class="day__counter">${+day}</span>
+        <time class="day__date" datetime="2019-03-18">${date.slice(4)}</time>
+      </div>
+      <ul class="trip-events__list">${tripTemplate(dayEvents)}</ul>
+    </li>
+  `;
+  }
+  return daysTemplate;
 };
