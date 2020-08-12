@@ -1,7 +1,7 @@
 import {EVENTS_LIST} from "./sort.js";
 
 const cities = Array.from(
-    new Set(EVENTS_LIST))
+    EVENTS_LIST)
         .sort((elem1, elem2) => elem1.time.startTime > elem2.time.startTime ? 1 : -1)
         .map((it) => it.destination);
 

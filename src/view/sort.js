@@ -6,11 +6,9 @@ const POINT_COUNT = getRandomFloat(4, 16);
 export const EVENTS_LIST = new Array(POINT_COUNT).fill().map(generateTripPoint);
 
 export const sortDates = Array.from(
-    new Set(
-        EVENTS_LIST
-            .sort((elem1, elem2) => elem1.time.startTime > elem2.time.startTime ? 1 : -1)
-            .map((it) => getDayFormat(it.time.startTime))
-    )
+    EVENTS_LIST
+        .sort((elem1, elem2) => elem1.time.startTime > elem2.time.startTime ? 1 : -1)
+        .map((it) => getDayFormat(it.time.startTime))
 );
 
 export const createSiteSortTemplate = () => {
