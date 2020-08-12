@@ -1,4 +1,16 @@
-// Сортировка проекта
+import {getRandomFloat, getDayFormat, getDayTemplate} from '../utils.js';
+import {generateTripPoint} from '../mock/trip-point.js';
+
+const POINT_COUNT = getRandomFloat(4, 16);
+
+export const EVENTS_LIST = new Array(POINT_COUNT).fill().map(generateTripPoint);
+
+export const sortDates = Array.from(
+    EVENTS_LIST
+        .sort((elem1, elem2) => elem1.time.startTime > elem2.time.startTime ? 1 : -1)
+        .map((it) => getDayFormat(it.time.startTime))
+);
+
 export const createSiteSortTemplate = () => {
   return (
     `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
@@ -30,6 +42,8 @@ export const createSiteSortTemplate = () => {
     </div>
 
     <span class="trip-sort__item  trip-sort__item--offers">Offers</span>
-  </form>`
+  </form>
+
+  <ul class="trip-days">${getDayTemplate(EVENTS_LIST, sortDates)}</ul>`
   );
 };
