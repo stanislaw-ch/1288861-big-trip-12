@@ -1,4 +1,5 @@
-// Фильтр проекта
+import {createElement} from "../utils.js";
+
 export const createSiteFilterTemplate = () => {
   return (
     `<form class="trip-filters" action="#" method="get">
@@ -21,3 +22,25 @@ export const createSiteFilterTemplate = () => {
   </form>`
   );
 };
+
+export default class Filter {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createSiteFilterTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
