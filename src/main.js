@@ -51,7 +51,7 @@ render(siteTripCost, new TripCost().getElement(), RenderPosition.BEFOREEND);
 
 // Меню проекта
 const siteMenu = siteHeaderElement.querySelector(`.trip-main__trip-controls h2`);
-render(siteMenu, new SiteMenu().getElement(), RenderPosition.AFTER);
+render(siteMenu, new SiteMenu().getElement(), RenderPosition.AFTEREND);
 
 // Фильтр проекта
 const siteFilter = siteHeaderElement.querySelector(`.trip-main__trip-controls`);
@@ -74,9 +74,7 @@ for (let date of sortDates) {
   render(dayBoard, dayComponent.getElement(), RenderPosition.BEFOREEND);
   const dayPoint = dayComponent.getElement().querySelector(`.trip-events__list`);
 
-  const dayEvents = EVENTS_LIST.filter((it) => {
-    return getDayFormat(it.time.startTime) === date;
-  });
+  const dayEvents = EVENTS_LIST.filter((it) => getDayFormat(it.time.startTime) === date);
 
   dayEvents.forEach((it) => renderPoint(dayPoint, it));
 }
