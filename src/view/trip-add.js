@@ -15,7 +15,7 @@ export const createSiteTripPointAddTemplate = (tripPoint) => {
    */
   const getTimeFormat = (date) => {
     const dateString = date.toDateString();
-    return `${getFormattedDayNumber(date.getDay() + 1)}/${getFormattedDayNumber(date.getMonth() + 1)}/${dateString.slice(13, 15)} ${getFormattedDayNumber(date.getHours() + 1)}:${getFormattedDayNumber(date.getMinutes() + 1)}`;
+    return `${dateString.slice(8, 10)}/${getFormattedDayNumber(date.getMonth() + 1)}/${dateString.slice(13, 15)} ${getFormattedDayNumber(date.getHours())}:${getFormattedDayNumber(date.getMinutes())}`;
   };
 
   return `<form class="trip-events__item  event  event--edit" action="#" method="post">

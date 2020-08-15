@@ -47,7 +47,7 @@ render(siteTrip, new TripInfo().getElement(), RenderPosition.AFTERBEGIN);
 
 // Информация о стоимости
 const siteTripCost = siteHeaderElement.querySelector(`.trip-main__trip-info`);
-render(siteTripCost, new TripCost().getElement(), RenderPosition.BEFOREEND);
+render(siteTripCost, new TripCost(EVENTS_LIST).getElement(), RenderPosition.BEFOREEND);
 
 // Меню проекта
 const siteMenu = siteHeaderElement.querySelector(`.trip-main__trip-controls h2`);
