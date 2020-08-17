@@ -1,21 +1,21 @@
 import {createElement} from "../utils.js";
-import {EVENTS_LIST} from "../main.js";
+import {points} from "../main.js";
 
 export const createSiteTripInfoTemplate = () => {
-  const cities = EVENTS_LIST
+  const cities = points
           .sort((elem1, elem2) => elem1.time.startTime > elem2.time.startTime ? 1 : -1)
           .map((it) => it.destination);
 
   const citiesMiddle = (cities.length > 2) ? `...` : cities[1];
 
   const startDay = new Date(
-      Math.min(...EVENTS_LIST
+      Math.min(...points
           .map((it) => it.time.startTime.getTime())
       )
   ).toDateString().slice(4, 10);
 
   let endDay = new Date(
-      Math.max(...EVENTS_LIST
+      Math.max(...points
           .map((it) => it.time.endTime.getTime())
       )
   ).toDateString().slice(4, 10);
@@ -24,15 +24,17 @@ export const createSiteTripInfoTemplate = () => {
     endDay = endDay.slice(-2);
   }
 
-  return (
-    `<section class="trip-main__trip-info  trip-info">
+  if (points.length !== 0) {
+    return `<section class="trip-main__trip-info  trip-info">
     <div class="trip-info__main">
       <h1 class="trip-info__title">${cities[0]} &mdash; ${citiesMiddle} &mdash; ${cities[cities.length - 1]}</h1>
 
       <p class="trip-info__dates">${startDay}&nbsp;&mdash;&nbsp;${endDay}</p>
     </div>
-  </section>`
-  );
+  </section>`;
+  } else {
+    return `<section class="trip-main__trip-info  trip-info"></section>`;
+  }
 };
 
 

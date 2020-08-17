@@ -2,15 +2,19 @@ import {createElement} from "../utils.js";
 
 export const createSiteTripCostTemplate = (tripPoint) => {
 
-  const totalPrice = tripPoint.map((it) => it.price).reduce(function (elem1, elem2) {
-    return elem1 + elem2;
-  });
+  if (tripPoint.length !== 0) {
+    const totalPrice = tripPoint.map((it) => it.price).reduce(function (total, price) {
+      return total + price;
+    });
 
-  return (
-    `<p class="trip-info__cost">
+    return `<p class="trip-info__cost">
       Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalPrice}</span>
-    </p>`
-  );
+      </p>`;
+  } else {
+    return `<p class="trip-info__cost">
+    Total: &euro;&nbsp;<span class="trip-info__cost-value">0</span>
+    </p>`;
+  }
 };
 
 export default class TripCost {

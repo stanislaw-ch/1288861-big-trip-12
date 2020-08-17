@@ -50,7 +50,7 @@ export const createSiteTripPointTemplate = (data) => {
     </li>`;
 };
 
-export default class TripPointList {
+export default class TripPoint {
   constructor(data) {
     this._data = data;
     this._element = null;
