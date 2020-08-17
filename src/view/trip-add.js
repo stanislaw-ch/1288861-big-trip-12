@@ -1,6 +1,6 @@
-import {getFormattedDayNumber} from '../utils.js';
+import {createElement, getFormattedDayNumber} from '../utils.js';
 
-export const createSiteTripEventsAddTemplate = (tripPoint) => {
+export const createSiteTripPointAddTemplate = (tripPoint) => {
   const {eventsTypes, destination, description, photos, price, offers} = tripPoint;
   const {startTime, endTime} = tripPoint.time;
 
@@ -15,11 +15,10 @@ export const createSiteTripEventsAddTemplate = (tripPoint) => {
    */
   const getTimeFormat = (date) => {
     const dateString = date.toDateString();
-    return `${getFormattedDayNumber(date.getDay() + 1)}/${getFormattedDayNumber(date.getMonth() + 1)}/${dateString.slice(13, 15)} ${getFormattedDayNumber(date.getHours() + 1)}:${getFormattedDayNumber(date.getMinutes() + 1)}`;
+    return `${dateString.slice(8, 10)}/${getFormattedDayNumber(date.getMonth() + 1)}/${dateString.slice(13, 15)} ${getFormattedDayNumber(date.getHours())}:${getFormattedDayNumber(date.getMinutes())}`;
   };
 
-  return (
-    `<form class="trip-events__item  event  event--edit" action="#" method="post">
+  return `<form class="trip-events__item  event  event--edit" action="#" method="post">
     <header class="event__header">
       <div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -152,6 +151,28 @@ export const createSiteTripEventsAddTemplate = (tripPoint) => {
         </div>
       </section>
     </section>
-  </form>`
-  );
+  </form>`;
 };
+
+export default class TripPointAdd {
+  constructor(data) {
+    this._data = data;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createSiteTripPointAddTemplate(this._data);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
