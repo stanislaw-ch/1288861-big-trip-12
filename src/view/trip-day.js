@@ -12,7 +12,7 @@ export const createTripDaysTemplate = (data) => {
 </li>`;
 };
 
-export default class TripDaysList {
+export default class TripDay {
   constructor(data) {
     this._data = data;
     this._element = null;
