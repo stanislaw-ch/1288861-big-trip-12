@@ -5,12 +5,7 @@ const createNoSiteTripPointTemplate = () => {
 };
 
 export default class NoTripPoints extends Abstract {
-  constructor(data) {
-    super();
-    this._data = data;
-  }
-
   getTemplate() {
-    return createNoSiteTripPointTemplate(this._data);
+    return createNoSiteTripPointTemplate();
   }
 }

@@ -11,9 +11,9 @@ export default class Trip {
     this._boardContainer = boardContainer;
 
     this._boardComponent = new TripBoard();
-    this._dayComponent = new TripDay();
-    this._pointComponent = new TripPoint();
-    this._pointAddComponent = new TripPointAdd();
+    // this._dayComponent = new TripDay();
+    // this._pointComponent = new TripPoint();
+    // this._pointAddComponent = new TripPointAdd();
     this._noPointsComponent = new NoTripPoints();
   }
 
@@ -29,15 +29,15 @@ export default class Trip {
   }
 
   _renderPoint(pointListElement, it) {
-    this._pointAddComponent = new TripPointAdd(it);
-    this._pointComponent = new TripPoint(it);
+    const pointAddComponent = new TripPointAdd(it);
+    const pointComponent = new TripPoint(it);
 
     const replacePointToForm = () => {
-      replace(this._pointAddComponent, this._pointComponent);
+      replace(pointAddComponent, pointComponent);
     };
 
     const replaceFormToPoint = () => {
-      replace(this._pointComponent, this._pointAddComponent);
+      replace(pointComponent, pointAddComponent);
     };
 
     const onEscKeyDown = (evt) => {
@@ -48,17 +48,17 @@ export default class Trip {
       }
     };
 
-    this._pointComponent.setEditClickHandler(() => {
+    pointComponent.setEditClickHandler(() => {
       replacePointToForm();
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
-    this._pointAddComponent.setFormSubmitHandler(() => {
+    pointAddComponent.setFormSubmitHandler(() => {
       replaceFormToPoint();
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
-    render(pointListElement, this._pointComponent, RenderPosition.BEFOREEND);
+    render(pointListElement, pointComponent, RenderPosition.BEFOREEND);
   }
 
   _renderPoints() {
