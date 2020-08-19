@@ -1,4 +1,5 @@
-import {createElement, getFormattedDayNumber} from '../utils.js';
+import {getFormattedDayNumber} from '../utils/points.js';
+import Abstract from "./abstract.js";
 
 export const createSiteTripPointAddTemplate = (tripPoint) => {
   const {eventsTypes, destination, description, photos, price, offers} = tripPoint;
@@ -154,25 +155,25 @@ export const createSiteTripPointAddTemplate = (tripPoint) => {
   </form>`;
 };
 
-export default class TripPointAdd {
+export default class TripPointAdd extends Abstract {
   constructor(data) {
+    super();
     this._data = data;
-    this._element = null;
+
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
   }
 
   getTemplate() {
     return createSiteTripPointAddTemplate(this._data);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
   }
 
-  removeElement() {
-    this._element = null;
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().addEventListener(`submit`, this._formSubmitHandler);
   }
 }

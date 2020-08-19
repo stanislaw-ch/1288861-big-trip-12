@@ -1,5 +1,4 @@
-import {getRandomInteger} from "../utils.js";
-import {getRandomFloat} from "../utils.js";
+import {getRandomInteger, getRandomFloat} from "../utils/common.js";
 
 const MSEC_IN_WEEK = 1000 * 3600 * 24 * 7;
 
