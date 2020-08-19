@@ -5,13 +5,12 @@ const createNoSiteTripPointTemplate = () => {
 };
 
 export default class NoTripPoint {
-  constructor(data) {
-    this._data = data;
+  constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createNoSiteTripPointTemplate(this._data);
+    return createNoSiteTripPointTemplate();
   }
 
   getElement() {

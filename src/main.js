@@ -12,7 +12,6 @@ import {render, RenderPosition, getDayFormat, getRandomFloat} from "./utils.js";
 import {generateTripPoint} from './mock/trip-point.js';
 
 const POINT_COUNT = getRandomFloat(4, 16);
-// const POINT_COUNT = 0;
 
 export const points = new Array(POINT_COUNT).fill().map(generateTripPoint);
 
