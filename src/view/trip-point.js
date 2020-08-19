@@ -1,4 +1,5 @@
-import {createElement, getFormattedTime, getDurationInterval} from '../utils.js';
+import Abstract from "./abstract.js";
+import {getFormattedTime, getDurationInterval} from '../utils/points.js';
 
 export const createSiteTripPointTemplate = (data) => {
   const {eventsTypes, destination, price, offers} = data;
@@ -50,24 +51,25 @@ export const createSiteTripPointTemplate = (data) => {
     </li>`;
 };
 
-export default class TripPoint {
+export default class TripPoint extends Abstract {
   constructor(data) {
+    super();
     this._data = data;
-    this._element = null;
+
+    this._editClickHandler = this._editClickHandler.bind(this);
   }
 
   getTemplate() {
     return createSiteTripPointTemplate(this._data);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+  _editClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.editClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setEditClickHandler(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._editClickHandler);
   }
 }

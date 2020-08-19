@@ -1,4 +1,4 @@
-import {createElement} from '../utils.js';
+import Abstract from "./abstract.js";
 
 export const createTripDaysTemplate = (data) => {
   const day = data.slice(0, 2);
@@ -12,25 +12,13 @@ export const createTripDaysTemplate = (data) => {
 </li>`;
 };
 
-export default class TripDay {
+export default class TripDay extends Abstract {
   constructor(data) {
+    super();
     this._data = data;
-    this._element = null;
   }
 
   getTemplate() {
     return createTripDaysTemplate(this._data);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
