@@ -56,6 +56,7 @@ export default class Trip {
     if (sortType === `default`) {
       this._currentSortType = sortType;
       this._clearPointList();
+      this._sortComponent.getElement().querySelector(`.trip-sort__item--day`).innerHTML = `Day`;
       this._renderPoints();
     } else {
       this._sortPoint(sortType);
@@ -104,6 +105,7 @@ export default class Trip {
 
   _clearPointList() {
     this._boardComponent.getElement().innerHTML = ``;
+    this._sortComponent.getElement().querySelector(`.trip-sort__item--day`).innerHTML = ``;
   }
 
   _renderPoints() {
