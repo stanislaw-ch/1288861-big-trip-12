@@ -25,7 +25,7 @@ export default class Trip {
 
   init(tripPoints) {
     this._tripPoints = tripPoints.slice();
-    this._sourcedBoardTasks = tripPoints.slice();
+    this._sourcedBoardPoint = tripPoints.slice();
 
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
@@ -33,7 +33,7 @@ export default class Trip {
     this._renderBoard();
   }
 
-  _sortTasks(sortType) {
+  _sortPoint(sortType) {
     switch (sortType) {
       case SortType.TIME_DOWN:
         this._tripPoints.sort(sortTimeDown);
@@ -42,7 +42,7 @@ export default class Trip {
         this._tripPoints.sort(sortPriceDown);
         break;
       default:
-        this._tripPoints = this._sourcedBoardTasks.slice();
+        this._tripPoints = this._sourcedBoardPoint.slice();
     }
 
     this._currentSortType = sortType;
@@ -53,10 +53,16 @@ export default class Trip {
       return;
     }
 
-    this._sortTasks(sortType);
+    if (sortType === `default`) {
+      this._clearPointList();
+      this._renderPoints();
+    } else {
+      this._sortPoint(sortType);
+      this._clearPointList();
+      this._renderPointsSort();
+    }
 
-    this._clearPointList();
-    this._renderPointsSort();
+
   }
 
   _renderSort() {
