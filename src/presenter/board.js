@@ -1,31 +1,67 @@
 import TripBoard from "../view/trip-board.js";
 import TripDay from "../view/trip-day.js";
+import TripDaySort from "../view/trip-day-sort.js";
 import TripPoint from "../view/trip-point.js";
 import TripPointAdd from "../view/trip-add.js";
 import NoTripPoints from "../view/trip-no-points.js";
+import Sort from "../view/sort.js";
 import {render, RenderPosition, replace} from "../utils/render.js";
 import {getDayFormat} from '../utils/points.js';
+import {sortTimeDown, sortPriceDown} from "../utils/points.js";
+import {SortType} from "../view/sort.js";
 
 export default class Trip {
   constructor(boardContainer) {
     this._boardContainer = boardContainer;
+    this._currentSortType = SortType.DEFAULT;
 
     this._boardComponent = new TripBoard();
-    // this._dayComponent = new TripDay();
-    // this._pointComponent = new TripPoint();
-    // this._pointAddComponent = new TripPointAdd();
+    this._pointComponent = new TripPoint();
     this._noPointsComponent = new NoTripPoints();
+    this._sortComponent = new Sort();
+
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
   init(tripPoints) {
     this._tripPoints = tripPoints.slice();
+    this._sourcedBoardTasks = tripPoints.slice();
+
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
+    this._renderSort();
     this._renderBoard();
   }
 
+  _sortTasks(sortType) {
+    switch (sortType) {
+      case SortType.TIME_DOWN:
+        this._tripPoints.sort(sortTimeDown);
+        break;
+      case SortType.PRICE_DOWN:
+        this._tripPoints.sort(sortPriceDown);
+        break;
+      default:
+        this._tripPoints = this._sourcedBoardTasks.slice();
+    }
+
+    this._currentSortType = sortType;
+  }
+
+  _handleSortTypeChange(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+
+    this._sortTasks(sortType);
+
+    this._clearPointList();
+    this._renderPointsSort();
+  }
+
   _renderSort() {
-    // Метод для рендеринга сортировки
+    render(this._boardComponent, this._sortComponent, RenderPosition.BEFOREBEGIN);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
   _renderPoint(pointListElement, it) {
@@ -61,6 +97,10 @@ export default class Trip {
     render(pointListElement, pointComponent, RenderPosition.BEFOREEND);
   }
 
+  _clearPointList() {
+    this._boardComponent.getElement().innerHTML = ``;
+  }
+
   _renderPoints() {
     const sortDates = new Set(this._tripPoints
       .map((it) => getDayFormat(it.time.startTime))
@@ -78,12 +118,23 @@ export default class Trip {
     }
   }
 
+  _renderPointsSort() {
+    this._boardSortComponent = new TripDaySort();
+
+    render(this._boardComponent, this._boardSortComponent, RenderPosition.BEFOREEND);
+
+    const boardSort = this._boardSortComponent.getElement().querySelector(`.trip-events__list`);
+
+    this._tripPoints.forEach((it) => this._renderPoint(boardSort, it));
+  }
+
   _renderNoPoints() {
     render(this._boardContainer, this._noPointsComponent, RenderPosition.BEFOREEND);
   }
 
   _renderBoard() {
     if (this._tripPoints.length !== 0) {
+
       this._renderPoints();
     } else {
       this._renderNoPoints();
