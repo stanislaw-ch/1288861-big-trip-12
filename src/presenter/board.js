@@ -16,7 +16,6 @@ export default class Trip {
     this._currentSortType = SortType.DEFAULT;
 
     this._boardComponent = new TripBoard();
-    this._pointComponent = new TripPoint();
     this._noPointsComponent = new NoTripPoints();
     this._sortComponent = new TripSort();
 
@@ -44,8 +43,6 @@ export default class Trip {
       case SortType.DEFAULT:
         this._tripPoints = this._sourcedBoardPoint.slice();
     }
-
-    this._currentSortType = sortType;
   }
 
   _handleSortTypeChange(sortType) {
@@ -53,14 +50,14 @@ export default class Trip {
       return;
     }
 
+    this._currentSortType = sortType;
+    this._clearPointList();
+
     if (sortType === `default`) {
-      this._currentSortType = sortType;
-      this._clearPointList();
       this._sortComponent.getElement().querySelector(`.trip-sort__item--day`).innerHTML = `Day`;
       this._renderPoints();
     } else {
       this._sortPoint(sortType);
-      this._clearPointList();
       this._renderPointsSort();
     }
   }
@@ -126,11 +123,11 @@ export default class Trip {
   }
 
   _renderPointsSort() {
-    this._boardSortComponent = new TripDaySort();
+    const boardSortComponent = new TripDaySort();
 
-    render(this._boardComponent, this._boardSortComponent, RenderPosition.BEFOREEND);
+    render(this._boardComponent, boardSortComponent, RenderPosition.BEFOREEND);
 
-    const boardSort = this._boardSortComponent.getElement().querySelector(`.trip-events__list`);
+    const boardSort = boardSortComponent.getElement().querySelector(`.trip-events__list`);
 
     this._tripPoints.forEach((it) => this._renderPoint(boardSort, it));
   }
