@@ -1,8 +1,7 @@
 import TripInfo from "./view/trip-info.js";
 import TripCost from "./view/trip-cost.js";
 import SiteMenu from "./view/site-menu.js";
-import Filter from "./view/filter.js";
-import Sort from "./view/sort.js";
+import TripFilter from "./view/trip-filter.js";
 import {getRandomFloat} from "./utils/common.js";
 import {render, RenderPosition} from "./utils/render.js";
 import {generateTripPoint} from './mock/trip-point.js';
@@ -29,12 +28,9 @@ render(siteMenu, new SiteMenu(), RenderPosition.AFTEREND);
 
 // Фильтр проекта
 const siteFilter = siteHeaderElement.querySelector(`.trip-main__trip-controls`);
-render(siteFilter, new Filter(), RenderPosition.BEFOREEND);
-
-// Сортировка проекта
-const siteBoard = siteMainElement.querySelector(`.trip-events`);
-render(siteBoard, new Sort(), RenderPosition.BEFOREEND);
+render(siteFilter, new TripFilter(), RenderPosition.BEFOREEND);
 
 // Список событий поездки
+const siteBoard = siteMainElement.querySelector(`.trip-events`);
 const boardPresenter = new TripPresenter(siteBoard);
 boardPresenter.init(points);

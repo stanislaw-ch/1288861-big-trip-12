@@ -60,3 +60,15 @@ export const getDayFormat = (date) => {
   const dateString = date.toDateString();
   return `${dateString.slice(8, 11)} ${dateString.slice(4, 7)} ${dateString.slice(13, 15)}`;
 };
+
+export const getDurationIntervalForSort = (startTime, endTime) => {
+  const durationInMin = (endTime.getTime() - startTime.getTime()) / 60000;
+
+  return durationInMin;
+};
+
+export const sortTimeDown = (pointA, pointB) =>
+  getDurationIntervalForSort(pointA.time.startTime, pointA.time.endTime) >
+  getDurationIntervalForSort(pointB.time.startTime, pointB.time.endTime) ? -1 : 1;
+
+export const sortPriceDown = (pointA, pointB) => pointA.price > pointB.price ? -1 : 1;
