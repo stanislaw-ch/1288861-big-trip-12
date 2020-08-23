@@ -2,6 +2,8 @@ import {getRandomInteger, getRandomFloat} from "../utils/common.js";
 
 const MSEC_IN_WEEK = 1000 * 3600 * 24 * 7;
 
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
 const generateDescription = () => {
   const descriptions = [
     `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget.`,
@@ -89,6 +91,7 @@ const currPointInTime = currDate.getTime();
 export const generateTripPoint = () => {
   const startTimestamp = getRandomFloat(currPointInTime - MSEC_IN_WEEK, currPointInTime + MSEC_IN_WEEK);
   return {
+    id: generateId(),
     eventsTypes: generateTypes(),
     destination: generateDestinations(),
     time: {
@@ -98,7 +101,8 @@ export const generateTripPoint = () => {
     price: getRandomFloat(0, 200),
     offers: offersArr.slice(getRandomFloat(0, 3), getRandomFloat(4, 5)),
     description: generateDescription(),
-    photos: photosArr.slice(getRandomInteger(0, 1), getRandomInteger(0, 5))
+    photos: photosArr.slice(getRandomInteger(0, 1), getRandomInteger(0, 5)),
+    isFavorite: Boolean(getRandomInteger(0, 1))
   };
 };
 

@@ -1,4 +1,4 @@
-import {getFormattedDayNumber} from '../utils/points.js';
+import {getTimeFormat} from '../utils/points.js';
 import Abstract from "./abstract.js";
 
 export const createSiteTripPointAddTemplate = (tripPoint) => {
@@ -7,17 +7,6 @@ export const createSiteTripPointAddTemplate = (tripPoint) => {
 
   const typePoint = eventsTypes.type;
   const typePicture = typePoint.toLowerCase();
-
-  /**
-   * Возвращает дату в формате день, месяц, год
-   * @param {object} date
-   *
-   * @return {object}
-   */
-  const getTimeFormat = (date) => {
-    const dateString = date.toDateString();
-    return `${dateString.slice(8, 10)}/${getFormattedDayNumber(date.getMonth() + 1)}/${dateString.slice(13, 15)} ${getFormattedDayNumber(date.getHours())}:${getFormattedDayNumber(date.getMinutes())}`;
-  };
 
   return `<form class="trip-events__item  event  event--edit" action="#" method="post">
     <header class="event__header">
