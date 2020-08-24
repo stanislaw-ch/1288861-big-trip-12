@@ -48,7 +48,7 @@ export default class Trip {
     }
 
     if (this._mode === Mode.EDITING) {
-      replace(this._pointComponent, prevPointComponent);
+      replace(this._pointEditComponent, prevPointEditComponent);
     }
 
     remove(prevPointComponent);
