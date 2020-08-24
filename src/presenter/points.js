@@ -17,24 +17,25 @@ export default class Trip {
     this._mode = Mode.DEFAULT;
 
     this._handleEditClick = this._handleEditClick.bind(this);
+    this._handleEditClickForm = this._handleEditClickForm.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(dayPoint, it) {
+  init(dayPoint, pointElement) {
     this._dayPoint = dayPoint;
-    this._pointElement = it;
+    this._pointElement = pointElement;
 
     const prevPointComponent = this._pointComponent;
     const prevPointEditComponent = this._pointEditComponent;
 
-    this._pointComponent = new TripPoint(it);
-    this._pointEditComponent = new TripPointEdit(it);
+    this._pointComponent = new TripPoint(pointElement);
+    this._pointEditComponent = new TripPointEdit(pointElement);
 
     this._pointComponent.setEditClickHandler(this._handleEditClick);
     this._pointEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
-    this._pointEditComponent.setEditClickHandler(this._handleFormSubmit);
+    this._pointEditComponent.setEditClickHandler(this._handleEditClickForm);
     this._pointEditComponent.setFormSubmitHandler(this._handleFormSubmit);
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
@@ -42,12 +43,12 @@ export default class Trip {
       return;
     }
 
-    if (this._mode === Mode.EDITING) {
+    if (this._mode === Mode.DEFAULT) {
       replace(this._pointComponent, prevPointComponent);
     }
 
-    if (this._dayPoint.getElement().contains(prevPointEditComponent.getElement())) {
-      replace(this._pointEditComponent, prevPointEditComponent);
+    if (this._mode === Mode.EDITING) {
+      replace(this._pointComponent, prevPointComponent);
     }
 
     remove(prevPointComponent);
@@ -90,21 +91,25 @@ export default class Trip {
     this._replacePointToForm();
   }
 
+  _handleEditClickForm() {
+    this._replaceFormToPoint();
+  }
+
   _handleFavoriteClick() {
     this._changeData(
         Object.assign(
             {},
             this._pointElement,
             {
-              // isFavorite: !this._pointElement.isFavorite
+              isFavorite: this._pointElement.isFavorite
             }
         )
     );
   }
 
   _handleFormSubmit(point) {
-    this._changeData(point);
     this._replaceFormToPoint();
+    this._changeData(this._dayPoint, point);
   }
 }
 
