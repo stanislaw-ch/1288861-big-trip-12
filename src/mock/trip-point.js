@@ -32,16 +32,16 @@ const generateDestinations = () => {
   return destination[randomIndex];
 };
 
-export const CITIES = new Set([
+export const CITIES = [
   `Amsterdam`,
   `Geneva`,
   `Chamonix`,
   `Paris`,
   `Roma`,
   `London`
-]);
+];
 
-export const POINT_TYPES = new Set([
+export const POINT_TYPES = [
   {
     type: `Taxi`,
     category: `Transfer`
@@ -82,7 +82,7 @@ export const POINT_TYPES = new Set([
     type: `Restaurant`,
     category: `Activity`
   }
-]);
+];
 
 const generateTypes = () => {
   const eventsTypes = [

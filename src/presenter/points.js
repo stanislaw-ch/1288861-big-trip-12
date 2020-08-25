@@ -23,15 +23,15 @@ export default class Trip {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(dayPoint, pointElement) {
+  init(dayPoint, pointItem) {
     this._dayPoint = dayPoint;
-    this._pointElement = pointElement;
+    this._pointElement = pointItem;
 
     const prevPointComponent = this._pointComponent;
     const prevPointEditComponent = this._pointEditComponent;
 
-    this._pointComponent = new TripPoint(pointElement);
-    this._pointEditComponent = new TripPointEdit(pointElement);
+    this._pointComponent = new TripPoint(pointItem);
+    this._pointEditComponent = new TripPointEdit(pointItem);
 
     this._pointComponent.setEditClickHandler(this._handleEditClick);
     this._pointEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
@@ -101,7 +101,7 @@ export default class Trip {
             {},
             this._pointElement,
             {
-              isFavorite: this._pointElement.isFavorite
+              isFavorite: !this._pointElement.isFavorite
             }
         )
     );

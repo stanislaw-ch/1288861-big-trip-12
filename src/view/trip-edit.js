@@ -153,6 +153,20 @@ export default class TripPointEdit extends SmartView {
     this._setInnerHandlers();
   }
 
+  static parsePointToData(data) {
+    return Object.assign({}, data);
+  }
+
+  static parseDataToPoint(data) {
+    data = Object.assign({}, data);
+
+    if (data.isFavorite) {
+      data.isFavorite = true;
+    }
+
+    return data;
+  }
+
   reset(data) {
     this.updateData(
         TripPointEdit.parsePointToData(data)
@@ -247,25 +261,5 @@ export default class TripPointEdit extends SmartView {
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
-  }
-
-  static parsePointToData(data) {
-    return Object.assign(
-        {},
-        data,
-        {
-          isFavorite: data.isFavorite,
-        }
-    );
-  }
-
-  static parseDataToPoint(data) {
-    data = Object.assign({}, data);
-
-    if (data.isFavorite) {
-      data.isFavorite = false;
-    }
-
-    return data;
   }
 }

@@ -14,14 +14,14 @@ export default class Trip {
   constructor(boardContainer) {
     this._boardContainer = boardContainer;
     this._currentSortType = SortType.DEFAULT;
-    this._pointPresenter = {};
+    this._pointItems = {};
 
     this._boardComponent = new TripBoard();
     this._noPointsComponent = new NoTripPoints();
     this._sortComponent = new TripSort();
 
     this._handlePointChange = this._handlePointChange.bind(this);
-    this._handleModeChange = this._handleModeChange.bind(this);
+    this._handleResetView = this._handleResetView.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
@@ -35,16 +35,16 @@ export default class Trip {
     this._renderBoard();
   }
 
-  _handleModeChange() {
+  _handleResetView() {
     Object
-      .values(this._pointPresenter)
+      .values(this._pointItems)
       .forEach((presenter) => presenter.resetView());
   }
 
   _handlePointChange(updatedDay, updatedPoint) {
     this._tripPoints = updateItem(this._tripPoints, updatedPoint);
     this._sourcedBoardPoints = updateItem(this._sourcedBoardPoints, updatedPoint);
-    this._pointPresenter[updatedPoint.id].init(updatedDay, updatedPoint);
+    this._pointItems[updatedPoint.id].init(updatedDay, updatedPoint);
   }
 
   _sortPoint(sortType) {
@@ -82,10 +82,10 @@ export default class Trip {
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
-  _renderPoint(dayPoint, it) {
-    const pointsPresenter = new PointsPresenter(this._handlePointChange, this._handleModeChange);
-    pointsPresenter.init(dayPoint, it);
-    this._pointPresenter[it.id] = pointsPresenter;
+  _renderPoint(dayPoint, pointItem) {
+    const pointsPresenter = new PointsPresenter(this._handlePointChange, this._handleResetView);
+    pointsPresenter.init(dayPoint, pointItem);
+    this._pointItems[pointItem.id] = pointsPresenter;
   }
 
   _clearPointList() {
