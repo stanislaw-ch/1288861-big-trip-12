@@ -229,12 +229,14 @@ export default class TripPointEdit extends SmartView {
   }
 
   _startDateChangeHandler([userDate]) {
-    this.updateData({
-      time: {
-        startTime: userDate,
-        endTime: this._data.time.endTime,
-      }
-    }, true);
+    if (userDate !== this._data.time.startTime) {
+      this.updateData({
+        time: {
+          startTime: userDate,
+          endTime: this._data.time.endTime,
+        }
+      }, true);
+    }
   }
 
   _endDateChangeHandler([userDate]) {

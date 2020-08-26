@@ -95,7 +95,7 @@ export default class Trip {
 
   _renderPoints() {
     const sortDates = new Set(this._tripPoints
-      .map((it) => getDayFormat(it.time.startTime))
+      .map((pointItem) => getDayFormat(pointItem.time.startTime))
       .sort((elem1, elem2) => elem1 > elem2 ? 1 : -1));
 
     for (let date of sortDates) {
@@ -104,9 +104,9 @@ export default class Trip {
       render(this._boardComponent, this._dayComponent, RenderPosition.BEFOREEND);
       const dayPoint = this._dayComponent.getElement().querySelector(`.trip-events__list`);
 
-      const dayEvents = this._tripPoints.filter((it) => getDayFormat(it.time.startTime) === date);
+      const dayEvents = this._tripPoints.filter((pointItem) => getDayFormat(pointItem.time.startTime) === date);
 
-      dayEvents.forEach((it) => this._renderPoint(dayPoint, it));
+      dayEvents.forEach((pointItem) => this._renderPoint(dayPoint, pointItem));
     }
   }
 
