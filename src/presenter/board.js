@@ -1,11 +1,11 @@
 import TripBoard from "../view/trip-board.js";
 import TripDay from "../view/trip-day.js";
 import TripDaySort from "../view/trip-day-sort.js";
-import TripPoint from "../view/trip-point.js";
-import TripPointAdd from "../view/trip-add.js";
 import NoTripPoints from "../view/trip-no-points.js";
 import TripSort from "../view/trip-sort.js";
-import {render, RenderPosition, replace} from "../utils/render.js";
+import PointsPresenter from "./points.js";
+import {updateItem} from "../utils/common.js";
+import {render, RenderPosition} from "../utils/render.js";
 import {getDayFormat} from '../utils/points.js';
 import {sortTimeDown, sortPriceDown} from "../utils/points.js";
 import {SortType} from "../view/trip-sort.js";
@@ -14,22 +14,37 @@ export default class Trip {
   constructor(boardContainer) {
     this._boardContainer = boardContainer;
     this._currentSortType = SortType.DEFAULT;
+    this._pointItems = {};
 
     this._boardComponent = new TripBoard();
     this._noPointsComponent = new NoTripPoints();
     this._sortComponent = new TripSort();
 
+    this._handlePointChange = this._handlePointChange.bind(this);
+    this._handleResetView = this._handleResetView.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
   init(tripPoints) {
     this._tripPoints = tripPoints.slice();
-    this._sourcedBoardPoint = tripPoints.slice();
+    this._sourcedBoardPoints = tripPoints.slice();
 
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
     this._renderSort();
     this._renderBoard();
+  }
+
+  _handleResetView() {
+    Object
+      .values(this._pointItems)
+      .forEach((presenter) => presenter.resetView());
+  }
+
+  _handlePointChange(updatedDay, updatedPoint) {
+    this._tripPoints = updateItem(this._tripPoints, updatedPoint);
+    this._sourcedBoardPoints = updateItem(this._sourcedBoardPoints, updatedPoint);
+    this._pointItems[updatedPoint.id].init(updatedDay, updatedPoint);
   }
 
   _sortPoint(sortType) {
@@ -67,37 +82,10 @@ export default class Trip {
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
-  _renderPoint(pointListElement, it) {
-    const pointAddComponent = new TripPointAdd(it);
-    const pointComponent = new TripPoint(it);
-
-    const replacePointToForm = () => {
-      replace(pointAddComponent, pointComponent);
-    };
-
-    const replaceFormToPoint = () => {
-      replace(pointComponent, pointAddComponent);
-    };
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape`) {
-        evt.preventDefault();
-        replaceFormToPoint();
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
-    pointComponent.setEditClickHandler(() => {
-      replacePointToForm();
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
-
-    pointAddComponent.setFormSubmitHandler(() => {
-      replaceFormToPoint();
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
-
-    render(pointListElement, pointComponent, RenderPosition.BEFOREEND);
+  _renderPoint(dayPoint, pointItem) {
+    const pointsPresenter = new PointsPresenter(this._handlePointChange, this._handleResetView);
+    pointsPresenter.init(dayPoint, pointItem);
+    this._pointItems[pointItem.id] = pointsPresenter;
   }
 
   _clearPointList() {
@@ -124,11 +112,9 @@ export default class Trip {
 
   _renderPointsSort() {
     const boardSortComponent = new TripDaySort();
-
     render(this._boardComponent, boardSortComponent, RenderPosition.BEFOREEND);
 
     const boardSort = boardSortComponent.getElement().querySelector(`.trip-events__list`);
-
     this._tripPoints.forEach((it) => this._renderPoint(boardSort, it));
   }
 
@@ -138,7 +124,6 @@ export default class Trip {
 
   _renderBoard() {
     if (this._tripPoints.length !== 0) {
-
       this._renderPoints();
     } else {
       this._renderNoPoints();

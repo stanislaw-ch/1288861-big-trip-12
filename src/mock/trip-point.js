@@ -2,7 +2,9 @@ import {getRandomInteger, getRandomFloat} from "../utils/common.js";
 
 const MSEC_IN_WEEK = 1000 * 3600 * 24 * 7;
 
-const generateDescription = () => {
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
+export const generateDescription = () => {
   const descriptions = [
     `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget.`,
     `Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra.`,
@@ -30,6 +32,58 @@ const generateDestinations = () => {
   return destination[randomIndex];
 };
 
+export const CITIES = [
+  `Amsterdam`,
+  `Geneva`,
+  `Chamonix`,
+  `Paris`,
+  `Roma`,
+  `London`
+];
+
+export const POINT_TYPES = [
+  {
+    type: `Taxi`,
+    category: `Transfer`
+  },
+  {
+    type: `Bus`,
+    category: `Transfer`
+  },
+  {
+    type: `Train`,
+    category: `Transfer`
+  },
+  {
+    type: `Ship`,
+    category: `Transfer`
+  },
+  {
+    type: `Transport`,
+    category: `Transfer`
+  },
+  {
+    type: `Drive`,
+    category: `Transfer`
+  },
+  {
+    type: `Flight`,
+    category: `Transfer`
+  },
+  {
+    type: `Check-In`,
+    category: `Activity`
+  },
+  {
+    type: `Sightseeing`,
+    category: `Activity`
+  },
+  {
+    type: `Restaurant`,
+    category: `Activity`
+  }
+];
+
 const generateTypes = () => {
   const eventsTypes = [
     {type: `Taxi`, category: `Transfer`},
@@ -51,7 +105,7 @@ const photosArr = [
   `http://picsum.photos/248/152?r=${Math.random()}`,
 ];
 
-const offersArr = [
+export const OFFERS = [
   {
     title: `Add luggage`,
     type: `luggage`,
@@ -83,12 +137,18 @@ const offersArr = [
     price: 20
   }
 ];
+
+export const getOffers = () => {
+  return OFFERS.slice(getRandomFloat(0, 3), getRandomFloat(4, 5));
+};
+
 const currDate = new Date();
 const currPointInTime = currDate.getTime();
 
 export const generateTripPoint = () => {
   const startTimestamp = getRandomFloat(currPointInTime - MSEC_IN_WEEK, currPointInTime + MSEC_IN_WEEK);
   return {
+    id: generateId(),
     eventsTypes: generateTypes(),
     destination: generateDestinations(),
     time: {
@@ -96,9 +156,10 @@ export const generateTripPoint = () => {
       endTime: new Date(startTimestamp + getRandomFloat(0, MSEC_IN_WEEK)),
     },
     price: getRandomFloat(0, 200),
-    offers: offersArr.slice(getRandomFloat(0, 3), getRandomFloat(4, 5)),
+    offers: getOffers(),
     description: generateDescription(),
-    photos: photosArr.slice(getRandomInteger(0, 1), getRandomInteger(0, 5))
+    photos: photosArr.slice(getRandomInteger(0, 1), getRandomInteger(0, 5)),
+    isFavorite: Boolean(getRandomInteger(0, 1))
   };
 };
 

@@ -61,6 +61,17 @@ export const getDayFormat = (date) => {
   return `${dateString.slice(8, 11)} ${dateString.slice(4, 7)} ${dateString.slice(13, 15)}`;
 };
 
+/**
+ * Возвращает дату в формате день, месяц, год
+ * @param {object} date
+ *
+ * @return {object}
+ */
+export const getTimeFormat = (date) => {
+  const dateString = date.toDateString();
+  return `${dateString.slice(8, 10)}/${getFormattedDayNumber(date.getMonth() + 1)}/${dateString.slice(13, 15)} ${getFormattedDayNumber(date.getHours())}:${getFormattedDayNumber(date.getMinutes())}`;
+};
+
 export const getDurationIntervalForSort = (startTime, endTime) => {
   const durationInMin = (endTime.getTime() - startTime.getTime()) / 60000;
 
