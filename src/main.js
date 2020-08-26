@@ -5,7 +5,7 @@ import TripFilter from "./view/trip-filter.js";
 import {getRandomFloat} from "./utils/common.js";
 import {render, RenderPosition} from "./utils/render.js";
 import {generateTripPoint} from './mock/trip-point.js';
-import TripPresenter from "./presenter/board.js";
+import TripPresenter from "./presenter/trip.js";
 
 const POINT_COUNT = getRandomFloat(4, 16);
 

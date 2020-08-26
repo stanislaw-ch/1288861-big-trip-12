@@ -188,6 +188,7 @@ export default class TripPointEdit extends SmartView {
   restoreHandlers() {
     this._setInnerHandlers();
     this._setDatepicker();
+    this.setEditClickHandler(this._callback.editClick);
     this.setFormSubmitHandler(this._callback.formSubmit);
   }
 
@@ -233,16 +234,18 @@ export default class TripPointEdit extends SmartView {
         startTime: userDate,
         endTime: this._data.time.endTime,
       }
-    });
+    }, true);
   }
 
   _endDateChangeHandler([userDate]) {
-    this.updateData({
-      time: {
-        startTime: this._data.time.startTime,
-        endTime: userDate,
-      }
-    });
+    if (userDate !== this._data.time.endTime) {
+      this.updateData({
+        time: {
+          startTime: this._data.time.startTime,
+          endTime: userDate,
+        }
+      }, true);
+    }
   }
 
   _setInnerHandlers() {
