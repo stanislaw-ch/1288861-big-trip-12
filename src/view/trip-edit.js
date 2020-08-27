@@ -205,9 +205,8 @@ export default class TripPointEdit extends SmartView {
           this.getElement().querySelector(`.event__input--time:first-of-type`),
           {
             enableTime: true,
-            /* eslint-disable */
+            /* eslint-disable-next-line */
             time_24hr: true,
-            /* eslint-enable */
             dateFormat: `d/m/y H:i`,
             defaultDate: this._data.time.startTime,
             onChange: this._startDateChangeHandler
@@ -217,9 +216,8 @@ export default class TripPointEdit extends SmartView {
           this.getElement().querySelector(`.event__input--time:last-of-type`),
           {
             enableTime: true,
-            /* eslint-disable */
+            /* eslint-disable-next-line */
             time_24hr: true,
-            /* eslint-enable */
             dateFormat: `d/m/y H:i`,
             defaultDate: this._data.time.endTime,
             onChange: this._endDateChangeHandler

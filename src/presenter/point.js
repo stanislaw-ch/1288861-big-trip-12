@@ -7,7 +7,7 @@ const Mode = {
   EDITING: `EDITING`
 };
 
-export default class Point {
+export default class PointPresenter {
   constructor(changeData, changeMode) {
     this._changeData = changeData;
     this._changeMode = changeMode;
@@ -110,7 +110,10 @@ export default class Point {
 
   _handleFormSubmit(point) {
     this._replaceFormToPoint();
-    this._changeData(this._dayPoint, point);
+    this._changeData(
+        this._dayPoint,
+        point
+    );
   }
 }
 

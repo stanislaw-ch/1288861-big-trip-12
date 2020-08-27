@@ -10,9 +10,9 @@ import {getDayFormat} from '../utils/points.js';
 import {sortTimeDown, sortPriceDown} from "../utils/points.js";
 import {SortType} from "../view/trip-sort.js";
 
-export default class Trip {
-  constructor(boardContainer) {
-    this._boardContainer = boardContainer;
+export default class TripPresenter {
+  constructor(tripContainer) {
+    this._tripContainer = tripContainer;
     this._currentSortType = SortType.DEFAULT;
     this._pointItems = {};
 
@@ -29,7 +29,7 @@ export default class Trip {
     this._tripPoints = tripPoints.slice();
     this._sourcedBoardPoints = tripPoints.slice();
 
-    render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
+    render(this._tripContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
     this._renderSort();
     this._renderTrip();

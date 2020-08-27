@@ -5,7 +5,7 @@ import TripFilter from "./view/trip-filter.js";
 import {getRandomFloat} from "./utils/common.js";
 import {render, RenderPosition} from "./utils/render.js";
 import {generateTripPoint} from './mock/trip-point.js';
-import TripPresenter from "./presenter/trip.js";
+import TripPresenter from "./presenter/trip-board.js";
 
 const POINT_COUNT = getRandomFloat(4, 16);
 
@@ -32,5 +32,5 @@ render(siteFilter, new TripFilter(), RenderPosition.BEFOREEND);
 
 // Список событий поездки
 const siteBoard = siteMainElement.querySelector(`.trip-events`);
-const boardPresenter = new TripPresenter(siteBoard);
-boardPresenter.init(points);
+const tripPresenter = new TripPresenter(siteBoard);
+tripPresenter.init(points);
