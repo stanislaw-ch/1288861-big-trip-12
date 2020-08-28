@@ -7,7 +7,7 @@ const Mode = {
   EDITING: `EDITING`
 };
 
-export default class Trip {
+export default class PointPresenter {
   constructor(changeData, changeMode) {
     this._changeData = changeData;
     this._changeMode = changeMode;
@@ -82,7 +82,7 @@ export default class Trip {
   _escKeyDownHandler(evt) {
     if (evt.key === `Escape`) {
       evt.preventDefault();
-      this._pointEditComponent.reset(this._dayPoint);
+      this._pointEditComponent.reset(this._pointElement);
       this._replaceFormToPoint();
     }
   }
@@ -92,6 +92,7 @@ export default class Trip {
   }
 
   _handleEditClickForm() {
+    this._pointEditComponent.reset(this._pointElement);
     this._replaceFormToPoint();
   }
 
@@ -109,7 +110,10 @@ export default class Trip {
 
   _handleFormSubmit(point) {
     this._replaceFormToPoint();
-    this._changeData(this._dayPoint, point);
+    this._changeData(
+        this._dayPoint,
+        point
+    );
   }
 }
 

@@ -1,3 +1,5 @@
+import moment from "moment";
+
 // Форматирует номер дня если он меньше нуля, добавляя в начало "0"
 export const getFormattedDayNumber = (num) => (num < 10) ? `0${num}` : num;
 
@@ -8,23 +10,7 @@ export const getFormattedDayNumber = (num) => (num < 10) ? `0${num}` : num;
  * @return {object}
  */
 export const getFormattedTime = (date) => {
-  const hours = getFormattedDayNumber(date.getHours());
-  const min = getFormattedDayNumber(date.getMinutes());
-
-  return `${hours}:${min}`;
-};
-
-/**
- * Возвращает время в формате час мин для интервала продолжительности события в точке
- * @param {object} minutes
- *
- * @return {object}
- */
-const getHoursMinInterval = (minutes) => {
-  const durationInHours = Math.floor(minutes / 60);
-  const durationInMin = minutes - durationInHours * 60;
-
-  return `${getFormattedDayNumber(durationInHours)}H ${getFormattedDayNumber(durationInMin)}M`;
+  return moment(date).format(`HH:mm`);
 };
 
 /**
@@ -35,19 +21,22 @@ const getHoursMinInterval = (minutes) => {
  * @return {object}
  */
 export const getDurationInterval = (startTime, endTime) => {
-  const durationInMin = Math.floor((endTime.getTime() - startTime.getTime()) / 60000);
+  const start = moment(startTime.getTime());
+  const end = moment(endTime.getTime());
+  const duration = end.diff(start);
+
+  const durationInMin = duration / 60000;
 
   if (durationInMin < 60) {
-    return `${getFormattedDayNumber(durationInMin)}M`;
+    return `${moment(duration).format(`mm`)}M`;
   }
 
   const durationInHours = durationInMin / 60;
   if (durationInHours < 24) {
-    return getHoursMinInterval(durationInMin);
+    return `${moment(duration).format(`HH`)}H ${moment(duration).format(`mm`)}M`;
   }
 
-  const durationInDays = Math.floor(durationInHours / 24);
-  return `${getFormattedDayNumber(durationInDays)}D ${getHoursMinInterval(durationInMin - durationInDays * 60 * 24)}`;
+  return `${moment(duration).format(`DD`)}D ${moment(duration).format(`HH`)}H ${moment(duration).format(`mm`)}M`;
 };
 
 /**
@@ -57,8 +46,7 @@ export const getDurationInterval = (startTime, endTime) => {
  * @return {object}
  */
 export const getDayFormat = (date) => {
-  const dateString = date.toDateString();
-  return `${dateString.slice(8, 11)} ${dateString.slice(4, 7)} ${dateString.slice(13, 15)}`;
+  return moment(date).format(`MMM DD YY`);
 };
 
 /**
@@ -68,8 +56,7 @@ export const getDayFormat = (date) => {
  * @return {object}
  */
 export const getTimeFormat = (date) => {
-  const dateString = date.toDateString();
-  return `${dateString.slice(8, 10)}/${getFormattedDayNumber(date.getMonth() + 1)}/${dateString.slice(13, 15)} ${getFormattedDayNumber(date.getHours())}:${getFormattedDayNumber(date.getMinutes())}`;
+  return `${moment(date).format(`DD/MM/YY HH:mm`)}`;
 };
 
 export const getDurationIntervalForSort = (startTime, endTime) => {
