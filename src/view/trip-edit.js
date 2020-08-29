@@ -1,9 +1,21 @@
+import he from "he";
 import SmartView from "./smart.js";
 import {getTimeFormat} from '../utils/points.js';
 import {POINT_TYPES, CITIES, OFFERS, generateDescription, getOffers} from '../mock/trip-point.js';
 import flatpickr from "flatpickr";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
+
+const BLANK_POINT = {
+  eventsTypes: {type: `Taxi`, category: `Transfer`},
+  destination: ``,
+  time: {startTime: getTimeFormat(new Date()), endTime: getTimeFormat(new Date())},
+  price: ``,
+  offers: [],
+  description: ``,
+  photos: [`http://picsum.photos/248/152?r=${Math.random()}`],
+  isFavorite: false
+};
 
 const pointTypes = Array.from(POINT_TYPES);
 
@@ -78,8 +90,8 @@ export const createSiteTripPointEditTemplate = (data) => {
       <label class="event__label  event__type-output" for="event-destination-1">
       ${typePoint} to
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1">
-      <datalist id="destination-list-1">${cityOptions}</datalist>
+      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(destination)}" list="destination-list-1">
+      <datalist id="destination-list-1">${he.encode(cityOptions)}</datalist>
     </div>
 
     <div class="event__field-group  event__field-group--time">
@@ -140,13 +152,14 @@ export const createSiteTripPointEditTemplate = (data) => {
 };
 
 export default class TripPointEdit extends SmartView {
-  constructor(data) {
+  constructor(data = BLANK_POINT) {
     super();
     this._data = TripPointEdit.parsePointToData(data);
     this._datepickerStart = null;
     this._datepickerEnd = null;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
     this._editClickHandler = this._editClickHandler.bind(this);
     this._favoriteToggleHandler = this._favoriteToggleHandler.bind(this);
 
@@ -175,6 +188,15 @@ export default class TripPointEdit extends SmartView {
     return data;
   }
 
+  removeElement() {
+    super.removeElement();
+
+    if (this._datepicker) {
+      this._datepicker.destroy();
+      this._datepicker = null;
+    }
+  }
+
   reset(data) {
     this.updateData(
         TripPointEdit.parsePointToData(data)
@@ -190,6 +212,7 @@ export default class TripPointEdit extends SmartView {
     this._setDatepicker();
     this.setEditClickHandler(this._callback.editClick);
     this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setDeleteClickHandler(this._callback.deleteClick);
   }
 
   _setDatepicker() {
@@ -287,6 +310,11 @@ export default class TripPointEdit extends SmartView {
     this._callback.formSubmit(TripPointEdit.parseDataToPoint(this._data));
   }
 
+  _formDeleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick(TripPointEdit.parseDataToPoint(this._data));
+  }
+
   _eventsTypeClickHandler(evt) {
     evt.preventDefault();
     this._data.eventsTypes = pointTypes.find((eventsTypes) => eventsTypes.type.toLowerCase() === evt.target.value);
@@ -320,5 +348,10 @@ export default class TripPointEdit extends SmartView {
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteClickHandler);
   }
 }

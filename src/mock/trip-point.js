@@ -2,7 +2,7 @@ import {getRandomInteger, getRandomFloat} from "../utils/common.js";
 
 const MSEC_IN_WEEK = 1000 * 3600 * 24 * 7;
 
-const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
 export const generateDescription = () => {
   const descriptions = [

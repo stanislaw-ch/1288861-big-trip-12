@@ -1,15 +1,22 @@
 import TripInfo from "./view/trip-info.js";
 import TripCost from "./view/trip-cost.js";
 import SiteMenu from "./view/site-menu.js";
-import TripFilter from "./view/trip-filter.js";
 import {getRandomFloat} from "./utils/common.js";
 import {render, RenderPosition} from "./utils/render.js";
 import {generateTripPoint} from './mock/trip-point.js';
 import TripPresenter from "./presenter/trip-board.js";
+import FilterPresenter from "./presenter/filter.js";
+import PointsModel from "./model/points.js";
+import FilterModel from "./model/filter.js";
 
 const POINT_COUNT = getRandomFloat(4, 16);
 
 export const points = new Array(POINT_COUNT).fill().map(generateTripPoint);
+
+const pointsModel = new PointsModel();
+pointsModel.setPoints(points);
+
+const filterModel = new FilterModel();
 
 const siteHeaderElement = document.querySelector(`.page-header`);
 const siteMainElement = document.querySelector(`.page-body__page-main`);
@@ -28,9 +35,17 @@ render(siteMenu, new SiteMenu(), RenderPosition.AFTEREND);
 
 // Фильтр проекта
 const siteFilter = siteHeaderElement.querySelector(`.trip-main__trip-controls`);
-render(siteFilter, new TripFilter(), RenderPosition.BEFOREEND);
+// render(siteFilter, new TripFilter(filters, `all`), RenderPosition.BEFOREEND);
 
 // Список событий поездки
 const siteBoard = siteMainElement.querySelector(`.trip-events`);
-const tripPresenter = new TripPresenter(siteBoard);
-tripPresenter.init(points);
+const tripPresenter = new TripPresenter(siteBoard, pointsModel, filterModel);
+const filterPresenter = new FilterPresenter(siteFilter, filterModel, pointsModel);
+
+filterPresenter.init();
+tripPresenter.init();
+
+document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
+  evt.preventDefault();
+  tripPresenter.createPoint();
+});
