@@ -331,7 +331,6 @@ export default class TripPointEdit extends SmartView {
     this._data.description = generateDescription();
 
     if (CITIES.includes(evt.target.value)) {
-      console.log(1);
       this.updateData({
         destination: this._data.destination,
         description: this._data.description
