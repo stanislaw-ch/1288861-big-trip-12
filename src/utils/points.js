@@ -70,3 +70,31 @@ export const sortTimeDown = (pointA, pointB) =>
   getDurationIntervalForSort(pointB.time.startTime, pointB.time.endTime) ? -1 : 1;
 
 export const sortPriceDown = (pointA, pointB) => pointA.price > pointB.price ? -1 : 1;
+
+export const isDatesEqual = (dateA, dateB) => {
+  if (dateA === null && dateB === null) {
+    return true;
+  }
+
+  return moment(dateA).isSame(dateB, `day`);
+};
+
+export const isPointExpired = (pointDate) => {
+  if (pointDate === null) {
+    return false;
+  }
+
+  const currentDate = new Date();
+
+  return currentDate.getTime() > pointDate.getTime();
+};
+
+export const isPointActual = (pointDate) => {
+  if (pointDate === null) {
+    return false;
+  }
+
+  const currentDate = new Date();
+
+  return currentDate.getTime() < pointDate.getTime();
+};

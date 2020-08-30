@@ -1,7 +1,7 @@
 import moment from "moment";
 import Abstract from "./abstract.js";
 
-export const createTripDaysTemplate = (data) => {
+export const createTripDayTemplate = (data) => {
   const day = moment(data).format(`D`);
 
   return `<li class="trip-days__item  day">
@@ -20,6 +20,6 @@ export default class TripDay extends Abstract {
   }
 
   getTemplate() {
-    return createTripDaysTemplate(this._data);
+    return createTripDayTemplate(this._data);
   }
 }
