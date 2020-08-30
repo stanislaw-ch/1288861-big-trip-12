@@ -27,8 +27,6 @@ export default class Smart extends Abstract {
   updateElement() {
     let prevElement = this.getElement();
 
-    this.getElement().querySelector(`.event__input--destination`).removeEventListener(`change`, this._eventsDestinationsClickHandler);
-
     const parent = prevElement.parentElement;
     this.removeElement();
 

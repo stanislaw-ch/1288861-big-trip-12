@@ -35,7 +35,6 @@ render(siteMenu, new SiteMenu(), RenderPosition.AFTEREND);
 
 // Фильтр проекта
 const siteFilter = siteHeaderElement.querySelector(`.trip-main__trip-controls`);
-// render(siteFilter, new TripFilter(filters, `all`), RenderPosition.BEFOREEND);
 
 // Список событий поездки
 const siteBoard = siteMainElement.querySelector(`.trip-events`);

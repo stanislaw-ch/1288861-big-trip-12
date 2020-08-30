@@ -1,5 +1,5 @@
 import PointEditView from "../view/trip-edit.js";
-import TripDay from "../view/trip-day.js";
+import TripDayContainer from "../view/trip-day-container.js";
 import {generateId} from "../mock/trip-point.js";
 import {remove, render, RenderPosition} from "../utils/render.js";
 import {UserAction, UpdateType} from "../const.js";
@@ -10,7 +10,7 @@ export default class PointNew {
     this._changeData = changeData;
 
     this._pointEditComponent = null;
-    this._dayComponent = new TripDay();
+    this._dayComponent = new TripDayContainer();
 
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);

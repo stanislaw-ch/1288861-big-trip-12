@@ -1,5 +1,5 @@
 import TripBoard from "../view/trip-board.js";
-import TripDays from "../view/trip-days.js";
+import TripDay from "../view/trip-day.js";
 import TripDaySort from "../view/trip-day-sort.js";
 import NoTripPoints from "../view/trip-no-points.js";
 import TripSort from "../view/trip-sort.js";
@@ -52,8 +52,6 @@ export default class TripPresenter {
     const filterType = this._filterModel.getFilter();
     const points = this._pointsModel.getPoints();
     const filtredPoints = filter[filterType](points);
-
-    // this._currentSortType = `default`;
 
     switch (this._currentSortType) {
       case SortType.TIME_DOWN:
@@ -126,9 +124,9 @@ export default class TripPresenter {
   }
 
   _renderPoint(dayPoint, pointItem) {
-    const pointItems = new PointPresenter(this._handleViewAction, this._handleResetView);
-    pointItems.init(dayPoint, pointItem);
-    this._pointItems[pointItem.id] = pointItems;
+    const pointPresenter = new PointPresenter(this._handleViewAction, this._handleResetView);
+    pointPresenter.init(dayPoint, pointItem);
+    this._pointItems[pointItem.id] = pointPresenter;
   }
 
   _clearSortPointList() {
@@ -139,11 +137,6 @@ export default class TripPresenter {
   _clearTripBoard() {
     this._pointNewPresenter.destroy();
     this._boardComponent.getElement().innerHTML = ``;
-    // this._sortComponent.getElement().querySelector(`.trip-sort__item--day`).innerHTML = ``;
-    // Object
-    //   .values(this._pointItems)
-    //   .forEach((presenter) => presenter.destroy());
-    // this._pointItems = {};
 
     remove(this._sortComponent);
     remove(this._noPointsComponent);
@@ -155,7 +148,7 @@ export default class TripPresenter {
       .sort((elem1, elem2) => elem1 > elem2 ? 1 : -1));
 
     for (let date of sortDates) {
-      const dayComponent = new TripDays(date);
+      const dayComponent = new TripDay(date);
 
       render(this._boardComponent, dayComponent, RenderPosition.BEFOREEND);
       const dayPoint = dayComponent.getElement().querySelector(`.trip-events__list`);

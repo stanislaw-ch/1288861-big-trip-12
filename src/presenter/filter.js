@@ -8,7 +8,6 @@ export default class Filter {
     this._filterContainer = filterContainer;
     this._filterModel = filterModel;
     this._pointsModel = pointsModel;
-    this._currentFilter = null;
 
     this._filterComponent = null;
 
@@ -20,12 +19,10 @@ export default class Filter {
   }
 
   init() {
-    this._currentFilter = this._filterModel.getFilter();
-
     const filters = this._getFilters();
     const prevFilterComponent = this._filterComponent;
 
-    this._filterComponent = new FilterView(filters, this._currentFilter);
+    this._filterComponent = new FilterView(filters, this._filterModel);
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
     if (prevFilterComponent === null) {
