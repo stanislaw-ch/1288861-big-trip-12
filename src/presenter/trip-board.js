@@ -9,7 +9,7 @@ import {render, RenderPosition, remove} from "../utils/render.js";
 import {getDayFormat} from '../utils/points.js';
 import {sortTimeDown, sortPriceDown} from "../utils/points.js";
 import {filter} from "../utils/filter.js";
-import {SortType, UpdateType, UserAction, FilterType} from "../const.js";
+import {SortType, UpdateType, UserAction} from "../const.js";
 
 export default class TripPresenter {
   constructor(tripContainer, pointsModel, filterModel) {
@@ -29,23 +29,33 @@ export default class TripPresenter {
     this._handleResetView = this._handleResetView.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
-    this._pointsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
-
     this._pointNewPresenter = new PointNewPresenter(this._boardComponent, this._handleViewAction);
   }
 
   init() {
     render(this._tripContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
+    this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+
     this._renderSort();
     this._renderTrip();
   }
 
-  createPoint() {
+  destroy() {
+    this._clearTripBoard();
+
+    // remove(this._taskListComponent);
+    remove(this._boardComponent);
+
+    this._pointsModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
+  }
+
+  createPoint(callback) {
     this._currentSortType = SortType.DEFAULT;
-    this._filterModel.setFilter(UpdateType.MINOR, FilterType.ALL);
-    this._pointNewPresenter.init();
+    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.ALL);
+    this._pointNewPresenter.init(callback);
   }
 
   _getPoints() {
@@ -86,10 +96,10 @@ export default class TripPresenter {
 
   _handleModelEvent(updateType, pointItem, dayPoint) {
     switch (updateType) {
-      case UpdateType.PATCH:
+      case UpdateType.MINOR:
         this._pointItems[pointItem.id].init(dayPoint, pointItem);
         break;
-      case UpdateType.MINOR:
+      case UpdateType.MAJOR:
         this._clearTripBoard();
         this._renderTrip();
         this._renderSort();
