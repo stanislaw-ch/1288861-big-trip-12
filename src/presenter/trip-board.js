@@ -9,7 +9,7 @@ import {render, RenderPosition, remove} from "../utils/render.js";
 import {getDayFormat} from '../utils/points.js';
 import {sortTimeDown, sortPriceDown} from "../utils/points.js";
 import {filter} from "../utils/filter.js";
-import {SortType, UpdateType, UserAction} from "../const.js";
+import {SortType, UpdateType, UserAction, FilterType} from "../const.js";
 
 export default class TripPresenter {
   constructor(tripContainer, pointsModel, filterModel) {
