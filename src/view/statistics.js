@@ -3,7 +3,7 @@ import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import Smart from "./smart.js";
 import {uniqTypes, costPointByType} from "../utils/statistics.js";
-import {getCurrentDate} from "../utils/points.js";
+// import {getCurrentDate} from "../utils/points.js";
 
 
 // const transportCtx = document.querySelector(`.statistics__chart--transport`);
@@ -15,7 +15,7 @@ const BAR_HEIGHT = 55;
 // timeSpendCtx.height = BAR_HEIGHT * 4;
 
 const renderMoneyChart = (moneyCtx, points) => {
-  console.log(points);
+  // console.log(points);
   const eventsTypes = points.map((item) => item.eventsTypes.type);
   const types = uniqTypes(eventsTypes);
   const pointByTypeCost = types.map((type) => costPointByType(points, type));

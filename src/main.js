@@ -68,7 +68,6 @@ filterPresenter.init();
 // Для удобства отладки скроем доску
 // и отобразим сразу статистику
 const siteStats = siteMainElement.querySelector(`.page-body__container`);
-console.log(siteStats);
 render(siteStats, new Statistics(pointsModel.getPoints()), RenderPosition.BEFOREEND);
 
 document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
