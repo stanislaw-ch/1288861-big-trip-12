@@ -9,7 +9,7 @@ import {render, RenderPosition, remove} from "../utils/render.js";
 import {getDayFormat} from '../utils/points.js';
 import {sortTimeDown, sortPriceDown} from "../utils/points.js";
 import {filter} from "../utils/filter.js";
-import {SortType, UpdateType, UserAction, FilterType} from "../const.js";
+import {SortType, UpdateType, UserAction} from "../const.js";
 
 export default class TripPresenter {
   constructor(tripContainer, pointsModel, filterModel) {
@@ -45,7 +45,6 @@ export default class TripPresenter {
   destroy() {
     this._clearTripBoard();
 
-    // remove(this._taskListComponent);
     remove(this._boardComponent);
 
     this._pointsModel.removeObserver(this._handleModelEvent);
@@ -53,8 +52,8 @@ export default class TripPresenter {
   }
 
   createPoint(callback) {
-    this._currentSortType = SortType.DEFAULT;
-    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.ALL);
+    // this._currentSortType = SortType.DEFAULT;
+    // this._filterModel.setFilter(UpdateType.MAJOR, FilterType.ALL);
     this._pointNewPresenter.init(callback);
   }
 

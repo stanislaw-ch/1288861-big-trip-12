@@ -1,31 +1,37 @@
 import moment from "moment";
 
-export const countCompletedTaskInDateRange = (tasks, dateFrom, dateTo) => {
-  return tasks.reduce((counter, task) => {
-    if (task.dueDate === null) {
-      return counter;
-    }
-
-    // С помощью moment.js проверям, сколько задач с дедлайном
-    // попадают в диапазон дат
-    if (
-      moment(task.dueDate).isSame(dateFrom) ||
-      moment(task.dueDate).isBetween(dateFrom, dateTo) ||
-      moment(task.dueDate).isSame(dateTo)
-    ) {
-      return counter + 1;
-    }
-
-    return counter;
-  }, 0);
-};
-
 export const uniqTypes = (items) => [...new Set(items)];
 
 export const costPointByType = (points, type) => {
   return points.filter((item) => item.eventsTypes.type === type)
-    .map((it) => it.price)
-    .reduce(function (total, price) {
-      return total + price;
-    });
+               .map((it) => it.price)
+               .reduce(function (total, price) {
+                 return total + price;
+               });
+};
+
+export const countPointByType = (points, type) => {
+  return points.filter((item) => item.eventsTypes.type === type).length;
+};
+
+export const countPointByTime = (points, type) => {
+  return points.filter((item) => item.eventsTypes.type === type).length;
+};
+
+export const getDuration = (startTime, endTime) => {
+
+  const start = moment(startTime.getTime());
+  const end = moment(endTime.getTime());
+  const duration = end.diff(start);
+  const durationInHours = (duration / 60000) / 60;
+
+  return Math.ceil(durationInHours);
+};
+
+export const getDurationInterval = (points, type) => {
+  return points.filter((item) => item.eventsTypes.type === type)
+               .map((item) => getDuration(item.time.startTime, item.time.endTime))
+               .reduce(function (total, time) {
+                 return total + time;
+               });
 };
