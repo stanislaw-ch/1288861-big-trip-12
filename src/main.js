@@ -24,12 +24,10 @@ const filterModel = new FilterModel();
 const siteHeaderElement = document.querySelector(`.page-header`);
 const siteMainElement = document.querySelector(`.page-body__page-main`);
 const siteMenuComponent = new SiteMenu(MenuItem.TABLE);
-// const tripAddButtonComponent = new TripAddButton();
 
 // Информация о поездке
 const siteTrip = siteHeaderElement.querySelector(`.trip-main`);
 render(siteTrip, new TripInfo(), RenderPosition.AFTERBEGIN);
-// render(siteTrip, tripAddButtonComponent, RenderPosition.BEFOREEND);
 
 // Информация о стоимости
 const siteTripCost = siteHeaderElement.querySelector(`.trip-main__trip-info`);
@@ -54,21 +52,8 @@ const siteStats = siteMainElement.querySelector(`.page-body__container`);
 
 let statisticsComponent = null;
 
-// const handlePointNewFormClose = () => {
-//   tripAddButtonComponent.getElement().querySelector(`.trip-main__event-add-btn`).disabled = false;
-//   siteMenuComponent.setMenuItem(MenuItem.TABLE);
-// };
-
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
-    // case MenuItem.ADD_NEW_EVENT:
-    //   remove(statisticsComponent);
-    //   tripPresenter.destroy();
-    //   filterModel.setFilter(UpdateType.MAJOR, FilterType.ALL);
-    //   tripPresenter.init();
-    //   tripPresenter.createPoint(handlePointNewFormClose);
-    //   tripAddButtonComponent.getElement().querySelector(`.trip-main__event-add-btn`).disabled = true;
-    //   break;
     case MenuItem.TABLE:
       tripPresenter.init();
       remove(statisticsComponent);
@@ -82,12 +67,9 @@ const handleSiteMenuClick = (menuItem) => {
 };
 
 siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
-// tripAddButtonComponent.setAddButtonHandler(handleSiteMenuClick);
-
 
 filterPresenter.init();
 tripPresenter.init();
-
 
 document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
   evt.preventDefault();

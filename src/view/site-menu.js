@@ -36,10 +36,12 @@ export default class SiteMenu extends Abstract {
     if (evt.target.tagName !== `A`) {
       return;
     }
-    // if (this._currentMenuType === evt.target.dataset.menuItem) {
-    //   return;
-    // }
     this._callback.menuClick(evt.target.dataset.menuItem);
+    const menuList = this.getElement().querySelectorAll(`.trip-tabs__btn`);
+    for (let listItem of menuList) {
+      listItem.classList.remove(`trip-tabs__btn--active`);
+    }
+    evt.target.classList.add(`trip-tabs__btn--active`);
   }
 
   setMenuClickHandler(callback) {
