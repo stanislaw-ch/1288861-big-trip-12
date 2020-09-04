@@ -261,12 +261,6 @@ export default class Statistics extends Smart {
 
   removeElement() {
     super.removeElement();
-
-    if (this._moneyChart !== null || this._transportChart !== null || this._timeChart !== null) {
-      this._moneyChart = null;
-      this._transportChart = null;
-      this._timeChart = null;
-    }
   }
 
   getTemplate() {

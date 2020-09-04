@@ -5,9 +5,7 @@ export const uniqTypes = (items) => [...new Set(items)];
 export const costPointByType = (points, type) => {
   return points.filter((item) => item.eventsTypes.type === type)
                .map((it) => it.price)
-               .reduce(function (total, price) {
-                 return total + price;
-               });
+               .reduce((total, price) => total + price);
 };
 
 export const countPointByType = (points, type) => {
@@ -31,7 +29,5 @@ export const getDuration = (startTime, endTime) => {
 export const getDurationInterval = (points, type) => {
   return points.filter((item) => item.eventsTypes.type === type)
                .map((item) => getDuration(item.time.startTime, item.time.endTime))
-               .reduce(function (total, time) {
-                 return total + time;
-               });
+               .reduce((total, time) => total + time);
 };

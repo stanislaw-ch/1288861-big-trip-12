@@ -1,4 +1,3 @@
-// import TripAddButton from "./view/event-add-button.js";
 import TripInfo from "./view/trip-info.js";
 import TripCost from "./view/trip-cost.js";
 import SiteMenu from "./view/site-menu.js";

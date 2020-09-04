@@ -52,8 +52,6 @@ export default class TripPresenter {
   }
 
   createPoint(callback) {
-    // this._currentSortType = SortType.DEFAULT;
-    // this._filterModel.setFilter(UpdateType.MAJOR, FilterType.ALL);
     this._pointNewPresenter.init(callback);
   }
 
