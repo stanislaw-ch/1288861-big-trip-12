@@ -11,7 +11,6 @@ export const UserAction = {
 };
 
 export const UpdateType = {
-  PATCH: `PATCH`,
   MINOR: `MINOR`,
   MAJOR: `MAJOR`
 };
@@ -20,4 +19,10 @@ export const FilterType = {
   ALL: `everything`,
   FUTURE: `future`,
   PAST: `past`
+};
+
+export const MenuItem = {
+  ADD_NEW_EVENT: `ADD_NEW_EVENT`,
+  TABLE: `TABLE`,
+  STATISTICS: `STATISTICS`
 };

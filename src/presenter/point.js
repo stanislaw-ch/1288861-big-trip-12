@@ -103,7 +103,7 @@ export default class PointPresenter {
   _handleFavoriteClick() {
     this._changeData(
         UserAction.UPDATE_POINT,
-        UpdateType.MINOR,
+        UpdateType.MAJOR,
         Object.assign(
             {},
             this._pointElement,
@@ -115,13 +115,13 @@ export default class PointPresenter {
   }
 
   _handleFormSubmit(update) {
-    const isMinorUpdate =
+    const isMajorUpdate =
       !isDatesEqual(this._pointElement.time.startTime, update.time.startTime) ||
       !isDatesEqual(this._pointElement.time.endTime, update.time.endTime);
 
     this._changeData(
         UserAction.UPDATE_POINT,
-        isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+        isMajorUpdate ? UpdateType.MAJOR : UpdateType.MINOR,
         update
     );
 
@@ -131,7 +131,7 @@ export default class PointPresenter {
   _handleDeleteClick(point) {
     this._changeData(
         UserAction.DELETE_POINT,
-        UpdateType.MINOR,
+        UpdateType.MAJOR,
         point
     );
   }
