@@ -1,4 +1,4 @@
-import he from "he";
+// import he from "he";
 import SmartView from "./smart.js";
 import {getTimeFormat} from '../utils/points.js';
 import {POINT_TYPES, CITIES, OFFERS, generateDescription, getOffers} from '../mock/trip-point.js';

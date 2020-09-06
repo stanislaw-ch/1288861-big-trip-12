@@ -1,5 +1,5 @@
 import Abstract from "./abstract.js";
-// import {points} from "../main.js";
+import {points} from "../main.js";
 
 export const createSiteTripInfoTemplate = () => {
   const cities = points
