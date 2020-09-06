@@ -150,15 +150,16 @@ export const generateTripPoint = () => {
   return {
     id: generateId(),
     eventsTypes: generateTypes(),
-    destination: generateDestinations(),
-    time: {
-      startTime: new Date(startTimestamp),
-      endTime: new Date(startTimestamp + getRandomFloat(0, MSEC_IN_WEEK)),
+    destination: {
+      name: generateDestinations(),
+      description: generateDescription(),
+      pictures: photosArr.slice(getRandomInteger(0, 1), getRandomInteger(0, 5)),
     },
+    startTime: new Date(startTimestamp),
+    endTime: new Date(startTimestamp + getRandomFloat(0, MSEC_IN_WEEK)),
     price: getRandomFloat(0, 200),
     offers: getOffers(),
-    description: generateDescription(),
-    photos: photosArr.slice(getRandomInteger(0, 1), getRandomInteger(0, 5)),
+
     isFavorite: Boolean(getRandomInteger(0, 1))
   };
 };

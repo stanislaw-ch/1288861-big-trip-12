@@ -1,22 +1,22 @@
 import Abstract from "./abstract.js";
-import {points} from "../main.js";
+// import {points} from "../main.js";
 
 export const createSiteTripInfoTemplate = () => {
   const cities = points
-          .sort((elem1, elem2) => elem1.time.startTime > elem2.time.startTime ? 1 : -1)
-          .map((it) => it.destination);
+          .sort((elem1, elem2) => elem1.startTime > elem2.startTime ? 1 : -1)
+          .map((it) => it.destination.name);
 
   const citiesMiddle = (cities.length > 2) ? `...` : cities[1];
 
   const startDay = new Date(
       Math.min(...points
-          .map((it) => it.time.startTime.getTime())
+          .map((it) => it.startTime.getTime())
       )
   ).toDateString().slice(4, 10);
 
   let endDay = new Date(
       Math.max(...points
-          .map((it) => it.time.endTime.getTime())
+          .map((it) => it.endTime.getTime())
       )
   ).toDateString().slice(4, 10);
 

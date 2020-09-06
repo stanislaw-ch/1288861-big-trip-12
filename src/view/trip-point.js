@@ -2,8 +2,8 @@ import Abstract from "./abstract.js";
 import {getFormattedTime, getDurationInterval} from '../utils/points.js';
 
 export const createSiteTripPointTemplate = (data) => {
-  const {eventsTypes, destination, price, offers} = data;
-  const {startTime, endTime} = data.time;
+  const {eventsTypes, price, offers, startTime, endTime} = data;
+  const {name} = data.destination;
 
   const typePoint = eventsTypes.type;
   const typePicture = typePoint.toLowerCase();
@@ -26,7 +26,7 @@ export const createSiteTripPointTemplate = (data) => {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${typePicture}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${typePoint} to ${destination}</h3>
+        <h3 class="event__title">${typePoint} to ${name}</h3>
 
         <div class="event__schedule">
           <p class="event__time">

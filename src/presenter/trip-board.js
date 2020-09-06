@@ -3,6 +3,7 @@ import TripDay from "../view/trip-day.js";
 import TripDaySort from "../view/trip-day-sort.js";
 import NoTripPoints from "../view/trip-no-points.js";
 import TripSort from "../view/trip-sort.js";
+import LoadingView from "../view/loading.js";
 import PointPresenter from "./point.js";
 import PointNewPresenter from "./point-new.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
@@ -12,16 +13,19 @@ import {filter} from "../utils/filter.js";
 import {SortType, UpdateType, UserAction} from "../const.js";
 
 export default class TripPresenter {
-  constructor(tripContainer, pointsModel, filterModel) {
+  constructor(tripContainer, pointsModel, filterModel, api) {
     this._tripContainer = tripContainer;
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
     this._currentSortType = SortType.DEFAULT;
     this._pointItems = {};
+    this._isLoading = true;
+    this._api = api;
 
     this._boardComponent = new TripBoard();
     this._noPointsComponent = new NoTripPoints();
     this._sortComponent = new TripSort();
+    this._loadingComponent = new LoadingView();
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -80,7 +84,10 @@ export default class TripPresenter {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this._pointsModel.updatePoint(updateType, update);
+        // this._pointsModel.updatePoint(updateType, update);
+        this._api.updatePoint(update).then((response) => {
+          this._pointsModel.updatePoint(updateType, response);
+        });
         break;
       case UserAction.ADD_POINT:
         this._pointsModel.addPoint(updateType, update);
@@ -102,10 +109,12 @@ export default class TripPresenter {
         this._renderSort();
         this._sortComponent.getElement().querySelector(`.trip-sort__item--day`).innerHTML = `Day`;
         break;
-      // case UpdateType.MAJOR:
-      //   this._clearTripBoard();
-      //   this._renderTrip();
-      //   break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        this._renderTrip();
+        this._renderSort();
+        break;
     }
   }
 
@@ -147,11 +156,12 @@ export default class TripPresenter {
 
     remove(this._sortComponent);
     remove(this._noPointsComponent);
+    remove(this._loadingComponent);
   }
 
   _renderPoints() {
     const sortDates = new Set(this._getPoints()
-      .map((pointItem) => getDayFormat(pointItem.time.startTime))
+      .map((pointItem) => getDayFormat(pointItem.startTime))
       .sort((elem1, elem2) => elem1 > elem2 ? 1 : -1));
 
     for (let date of sortDates) {
@@ -160,7 +170,7 @@ export default class TripPresenter {
       render(this._boardComponent, dayComponent, RenderPosition.BEFOREEND);
       const dayPoint = dayComponent.getElement().querySelector(`.trip-events__list`);
 
-      const dayEvents = this._getPoints().filter((pointItem) => getDayFormat(pointItem.time.startTime) === date);
+      const dayEvents = this._getPoints().filter((pointItem) => getDayFormat(pointItem.startTime) === date);
 
       dayEvents.forEach((pointItem) => this._renderPoint(dayPoint, pointItem));
     }
@@ -174,12 +184,19 @@ export default class TripPresenter {
     this._getPoints().forEach((it) => this._renderPoint(boardSort, it));
   }
 
+  _renderLoading() {
+    render(this._boardComponent, this._loadingComponent, RenderPosition.BEFOREEND);
+  }
+
   _renderNoPoints() {
-    render(this._boardContainer, this._noPointsComponent, RenderPosition.BEFOREEND);
+    render(this._boardComponent, this._noPointsComponent, RenderPosition.BEFOREEND);
   }
 
   _renderTrip() {
-    if (this._getPoints().length !== 0) {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    } else if (this._getPoints().length !== 0) {
       this._renderPoints();
     } else {
       this._renderNoPoints();

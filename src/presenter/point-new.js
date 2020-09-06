@@ -1,6 +1,6 @@
 import PointEditView from "../view/trip-edit.js";
 import TripDayContainer from "../view/trip-day-container.js";
-import {generateId} from "../mock/trip-point.js";
+import {generateId} from "../utils/points.js";
 import {remove, render, RenderPosition} from "../utils/render.js";
 import {UserAction, UpdateType} from "../const.js";
 
