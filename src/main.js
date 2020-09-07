@@ -2,9 +2,7 @@
 // import TripCost from "./view/trip-cost.js";
 import SiteMenu from "./view/site-menu.js";
 import Statistics from "./view/statistics.js";
-// import {getRandomFloat} from "./utils/common.js";
 import {render, RenderPosition, remove} from "./utils/render.js";
-// import {generateTripPoint} from './mock/trip-point.js';
 import TripPresenter from "./presenter/trip-board.js";
 import FilterPresenter from "./presenter/filter.js";
 import PointsModel from "./model/points.js";
@@ -12,28 +10,15 @@ import FilterModel from "./model/filter.js";
 import {MenuItem, UpdateType, FilterType} from "./const.js";
 import Api from "./api.js";
 
-// const POINT_COUNT = getRandomFloat(4, 16);
 const AUTHORIZATION = `Basic oo1iu2ygf`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
-
-// export const points = new Array(POINT_COUNT).fill().map(generateTripPoint);
-// const api = new Api(END_POINT, AUTHORIZATION);
 
 const siteHeaderElement = document.querySelector(`.page-header`);
 const siteMainElement = document.querySelector(`.page-body__page-main`);
 
-// api.getPoints().then((points1) => {
-//   console.log(points1);
-//   // Есть проблема: cтруктура объекта похожа, но некоторые ключи называются иначе,
-//   // а ещё на сервере используется snake_case, а у нас camelCase.
-//   // Можно, конечно, переписать часть нашего клиентского приложения, но зачем?
-//   // Есть вариант получше - паттерн "Адаптер"
-// });
-
 const api = new Api(END_POINT, AUTHORIZATION);
 
 const pointsModel = new PointsModel();
-// pointsModel.setPoints(points);
 
 const filterModel = new FilterModel();
 const siteMenuComponent = new SiteMenu(MenuItem.TABLE);
@@ -52,7 +37,6 @@ const handlePointNewFormClose = () => {
 
 // Меню проекта
 const siteMenu = siteHeaderElement.querySelector(`.trip-main__trip-controls h2`);
-// render(siteMenu, siteMenuComponent, RenderPosition.AFTEREND);
 
 // Фильтр проекта
 const siteFilter = siteHeaderElement.querySelector(`.trip-main__trip-controls`);
@@ -78,8 +62,6 @@ const handleSiteMenuClick = (menuItem) => {
       break;
   }
 };
-
-// siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
 
 filterPresenter.init();
 tripPresenter.init();

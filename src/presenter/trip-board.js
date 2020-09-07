@@ -84,7 +84,6 @@ export default class TripPresenter {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        // this._pointsModel.updatePoint(updateType, update);
         this._api.updatePoint(update).then((response) => {
           this._pointsModel.updatePoint(updateType, response);
         });
@@ -154,8 +153,6 @@ export default class TripPresenter {
     this._boardComponent.getElement().innerHTML = ``;
 
     remove(this._sortComponent);
-    // remove(this._noPointsComponent);
-    // remove(this._loadingComponent);
   }
 
   _renderPoints() {
