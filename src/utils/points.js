@@ -21,8 +21,8 @@ export const getFormattedTime = (date) => {
  * @return {object}
  */
 export const getDurationInterval = (startTime, endTime) => {
-  const start = moment(startTime.getTime());
-  const end = moment(endTime.getTime());
+  const start = moment(new Date(startTime).getTime());
+  const end = moment(new Date(endTime).getTime());
   const duration = end.diff(start);
 
   const durationInMin = duration / 60000;
@@ -60,14 +60,14 @@ export const getTimeFormat = (date) => {
 };
 
 export const getDurationIntervalForSort = (startTime, endTime) => {
-  const durationInMin = (endTime.getTime() - startTime.getTime()) / 60000;
+  const durationInMin = (new Date(endTime).getTime() - new Date(startTime).getTime()) / 60000;
 
   return durationInMin;
 };
 
 export const sortTimeDown = (pointA, pointB) =>
-  getDurationIntervalForSort(pointA.time.startTime, pointA.time.endTime) >
-  getDurationIntervalForSort(pointB.time.startTime, pointB.time.endTime) ? -1 : 1;
+  getDurationIntervalForSort(pointA.startTime, pointA.endTime) >
+  getDurationIntervalForSort(pointB.startTime, pointB.endTime) ? -1 : 1;
 
 export const sortPriceDown = (pointA, pointB) => pointA.price > pointB.price ? -1 : 1;
 
@@ -79,22 +79,37 @@ export const isDatesEqual = (dateA, dateB) => {
   return moment(dateA).isSame(dateB, `day`);
 };
 
-export const isPointExpired = (pointDate) => {
-  if (pointDate === null) {
+export const isPointExpired = (date) => {
+  if (date === null) {
     return false;
   }
 
   const currentDate = new Date();
+  const pointDate = new Date(date);
 
   return currentDate.getTime() > pointDate.getTime();
 };
 
-export const isPointActual = (pointDate) => {
-  if (pointDate === null) {
+export const isPointActual = (date) => {
+  if (date === null) {
     return false;
   }
 
   const currentDate = new Date();
+  const pointDate = new Date(date);
 
   return currentDate.getTime() < pointDate.getTime();
+};
+
+// Date.now() и Math.random() - плохие решения для генерации id
+// в "продуктовом" коде, а для моков самое то.
+// Для "продуктового" кода используйте что-то понадежнее,
+// вроде nanoid - https://github.com/ai/nanoid
+export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
+export const capitalizeFirstLetter = (str) => {
+  if (!str) {
+    return str;
+  }
+  return str[0].toUpperCase() + str.slice(1);
 };

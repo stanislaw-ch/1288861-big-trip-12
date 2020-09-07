@@ -1,19 +1,22 @@
-import he from "he";
+// import he from "he";
 import SmartView from "./smart.js";
-import {getTimeFormat} from '../utils/points.js';
+import {getTimeFormat, capitalizeFirstLetter} from '../utils/points.js';
 import {POINT_TYPES, CITIES, OFFERS, generateDescription, getOffers} from '../mock/trip-point.js';
 import flatpickr from "flatpickr";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const BLANK_POINT = {
-  eventsTypes: {type: `Taxi`, category: `Transfer`},
-  destination: ``,
-  time: {startTime: getTimeFormat(new Date()), endTime: getTimeFormat(new Date())},
+  eventsTypes: `taxi`,
+  destination: {
+    name: ``,
+    description: ``,
+    pictures: [],
+  },
+  startTime: getTimeFormat(new Date()),
+  endTime: getTimeFormat(new Date()),
   price: ``,
   offers: [],
-  description: ``,
-  photos: [`http://picsum.photos/248/152?r=${Math.random()}`],
   isFavorite: false
 };
 
@@ -36,11 +39,10 @@ const getTypesTemplate = (list, checkedType) => {
 };
 
 export const createSiteTripPointEditTemplate = (data) => {
-  const {eventsTypes, destination, price, offers, isFavorite, description, photos} = data;
-  const {startTime, endTime} = data.time;
+  const {eventsTypes, price, offers, isFavorite, startTime, endTime} = data;
+  const {description, name, pictures} = data.destination;
 
-  const typePoint = eventsTypes.type;
-  const typePicture = typePoint.toLowerCase();
+  const typePoint = capitalizeFirstLetter(eventsTypes);
 
   const groupOfTypes = new Set(pointTypes.map((item) => item.category));
 
@@ -79,7 +81,7 @@ export const createSiteTripPointEditTemplate = (data) => {
     <div class="event__type-wrapper">
       <label class="event__type  event__type-btn" for="event-type-toggle-1">
         <span class="visually-hidden">Choose event type</span>
-        <img class="event__type-icon" width="17" height="17" src="img/icons/${typePicture}.png" alt="Event type icon">
+        <img class="event__type-icon" width="17" height="17" src="img/icons/${eventsTypes}.png" alt="Event type icon">
       </label>
       <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -90,8 +92,8 @@ export const createSiteTripPointEditTemplate = (data) => {
       <label class="event__label  event__type-output" for="event-destination-1">
       ${typePoint} to
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(destination)}" list="destination-list-1">
-      <datalist id="destination-list-1">${he.encode(cityOptions)}</datalist>
+      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name}" list="destination-list-1">
+      <datalist id="destination-list-1">${cityOptions}</datalist>
     </div>
 
     <div class="event__field-group  event__field-group--time">
@@ -143,7 +145,7 @@ export const createSiteTripPointEditTemplate = (data) => {
 
       <div class="event__photos-container">
         <div class="event__photos-tape">
-          ${photos.map((it) =>`<img class="event__photo" src="${it}" alt="Event photo">`).join(``)}
+          ${pictures.map((it) =>`<img class="event__photo" src="${it.src}" alt="${it.description}">`).join(``)}
         </div>
       </div>
     </section>
@@ -231,7 +233,7 @@ export default class TripPointEdit extends SmartView {
             /* eslint-disable-next-line */
             time_24hr: true,
             dateFormat: `d/m/y H:i`,
-            defaultDate: this._data.time.startTime,
+            defaultDate: this._data.startTime,
             onChange: this._startDateChangeHandler
           }
       );
@@ -242,7 +244,7 @@ export default class TripPointEdit extends SmartView {
             /* eslint-disable-next-line */
             time_24hr: true,
             dateFormat: `d/m/y H:i`,
-            defaultDate: this._data.time.endTime,
+            defaultDate: this._data.endTime,
             onChange: this._endDateChangeHandler
           }
       );
@@ -250,21 +252,21 @@ export default class TripPointEdit extends SmartView {
   }
 
   _startDateChangeHandler([userDate]) {
-    if (userDate !== this._data.time.startTime) {
+    if (userDate !== this._data.startTime) {
       this.updateData({
         time: {
           startTime: userDate,
-          endTime: this._data.time.endTime,
+          endTime: this._data.endTime,
         }
       }, true);
     }
   }
 
   _endDateChangeHandler([userDate]) {
-    if (userDate !== this._data.time.endTime) {
+    if (userDate !== this._data.endTime) {
       this.updateData({
         time: {
-          startTime: this._data.time.startTime,
+          startTime: this._data.startTime,
           endTime: userDate,
         }
       }, true);

@@ -2,8 +2,8 @@ import {getTimeFormat} from '../utils/points.js';
 import Abstract from "./abstract.js";
 
 export const createSiteTripPointAddTemplate = (tripPoint) => {
-  const {eventsTypes, destination, description, photos, price, offers} = tripPoint;
-  const {startTime, endTime} = tripPoint.time;
+  const {eventsTypes, price, offers, startTime, endTime} = tripPoint;
+  const {photos, description, name} = tripPoint.destination;
 
   const typePoint = eventsTypes.type;
   const typePicture = typePoint.toLowerCase();
@@ -82,7 +82,7 @@ export const createSiteTripPointAddTemplate = (tripPoint) => {
         <label class="event__label  event__type-output" for="event-destination-1">
           ${typePoint} to
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1">
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name}" list="destination-list-1">
         <datalist id="destination-list-1">
           <option value="Amsterdam"></option>
           <option value="Geneva"></option>
