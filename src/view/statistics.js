@@ -6,11 +6,11 @@ import {uniqTypes, costPointByType, countPointByType, getDurationInterval} from 
 const BAR_HEIGHT = 55;
 
 const renderMoneyChart = (moneyCtx, points) => {
-  const eventsTypes = points.map((item) => item.eventsTypes.type);
+  const eventsTypes = points.map((item) => item.eventsTypes);
   const types = uniqTypes(eventsTypes);
   const pointByTypeCost = types.map((item) => costPointByType(points, item));
 
-  moneyCtx.height = BAR_HEIGHT * 4;
+  moneyCtx.height = BAR_HEIGHT * 6;
 
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
@@ -79,11 +79,11 @@ const renderMoneyChart = (moneyCtx, points) => {
 };
 
 const renderTransportChart = (transportCtx, points) => {
-  const eventsTypes = points.map((item) => item.eventsTypes.type);
+  const eventsTypes = points.map((item) => item.eventsTypes);
   const types = uniqTypes(eventsTypes);
   const pointByTypeTransport = types.map((item) => countPointByType(points, item));
 
-  transportCtx.height = BAR_HEIGHT * 4;
+  transportCtx.height = BAR_HEIGHT * 6;
 
   return new Chart(transportCtx, {
     plugins: [ChartDataLabels],
@@ -153,11 +153,11 @@ const renderTransportChart = (transportCtx, points) => {
 };
 
 const renderTimeChart = (transportCtx, points) => {
-  const eventsTypes = points.map((item) => item.eventsTypes.type);
+  const eventsTypes = points.map((item) => item.eventsTypes);
   const types = uniqTypes(eventsTypes);
   const pointByTypeTime = types.map((item) => getDurationInterval(points, item));
 
-  transportCtx.height = BAR_HEIGHT * 4;
+  transportCtx.height = BAR_HEIGHT * 6;
 
   return new Chart(transportCtx, {
     plugins: [ChartDataLabels],

@@ -92,8 +92,8 @@ export default class Points extends Observer {
     // Ненужные ключи мы удаляем
     delete adaptedPoint.price;
     delete adaptedPoint.eventsTypes;
-    delete adaptedPoint.date_from;
-    delete adaptedPoint.date_to;
+    delete adaptedPoint.startTime;
+    delete adaptedPoint.endTime;
 
     return adaptedPoint;
   }

@@ -60,14 +60,14 @@ export const getTimeFormat = (date) => {
 };
 
 export const getDurationIntervalForSort = (startTime, endTime) => {
-  const durationInMin = (endTime.getTime() - startTime.getTime()) / 60000;
+  const durationInMin = (new Date(endTime).getTime() - new Date(startTime).getTime()) / 60000;
 
   return durationInMin;
 };
 
 export const sortTimeDown = (pointA, pointB) =>
-  getDurationIntervalForSort(pointA.time.startTime, pointA.time.endTime) >
-  getDurationIntervalForSort(pointB.time.startTime, pointB.time.endTime) ? -1 : 1;
+  getDurationIntervalForSort(pointA.startTime, pointA.endTime) >
+  getDurationIntervalForSort(pointB.startTime, pointB.endTime) ? -1 : 1;
 
 export const sortPriceDown = (pointA, pointB) => pointA.price > pointB.price ? -1 : 1;
 
@@ -106,3 +106,10 @@ export const isPointActual = (date) => {
 // Для "продуктового" кода используйте что-то понадежнее,
 // вроде nanoid - https://github.com/ai/nanoid
 export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
+export const capitalizeFirstLetter = (str) => {
+  if (!str) {
+    return str;
+  }
+  return str[0].toUpperCase() + str.slice(1);
+};

@@ -13,7 +13,7 @@ import {MenuItem, UpdateType, FilterType} from "./const.js";
 import Api from "./api.js";
 
 // const POINT_COUNT = getRandomFloat(4, 16);
-const AUTHORIZATION = `Basic hdh4j5l5533ddff`;
+const AUTHORIZATION = `Basic oo1iu2ygf`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 
 // export const points = new Array(POINT_COUNT).fill().map(generateTripPoint);

@@ -1,12 +1,12 @@
 import Abstract from "./abstract.js";
+import {capitalizeFirstLetter} from '../utils/points.js';
 import {getFormattedTime, getDurationInterval} from '../utils/points.js';
 
 export const createSiteTripPointTemplate = (data) => {
   const {eventsTypes, price, offers, startTime, endTime} = data;
   const {name} = data.destination;
 
-  const typePoint = eventsTypes.type;
-  const typePicture = typePoint.toLowerCase();
+  const typePoint = capitalizeFirstLetter(eventsTypes);
 
   const offerList = offers.slice(0, 3);
 
@@ -24,7 +24,7 @@ export const createSiteTripPointTemplate = (data) => {
   return `<li class="trip-events__item">
       <div class="event">
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/${typePicture}.png" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="img/icons/${eventsTypes}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${typePoint} to ${name}</h3>
 

@@ -1,13 +1,13 @@
 // import he from "he";
 import SmartView from "./smart.js";
-import {getTimeFormat} from '../utils/points.js';
+import {getTimeFormat, capitalizeFirstLetter} from '../utils/points.js';
 import {POINT_TYPES, CITIES, OFFERS, generateDescription, getOffers} from '../mock/trip-point.js';
 import flatpickr from "flatpickr";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const BLANK_POINT = {
-  eventsTypes: {type: `Taxi`, category: `Transfer`},
+  eventsTypes: `taxi`,
   destination: {
     name: ``,
     description: ``,
@@ -42,8 +42,7 @@ export const createSiteTripPointEditTemplate = (data) => {
   const {eventsTypes, price, offers, isFavorite, startTime, endTime} = data;
   const {description, name, pictures} = data.destination;
 
-  const typePoint = eventsTypes.type;
-  const typePicture = typePoint.toLowerCase();
+  const typePoint = capitalizeFirstLetter(eventsTypes);
 
   const groupOfTypes = new Set(pointTypes.map((item) => item.category));
 
@@ -82,7 +81,7 @@ export const createSiteTripPointEditTemplate = (data) => {
     <div class="event__type-wrapper">
       <label class="event__type  event__type-btn" for="event-type-toggle-1">
         <span class="visually-hidden">Choose event type</span>
-        <img class="event__type-icon" width="17" height="17" src="img/icons/${typePicture}.png" alt="Event type icon">
+        <img class="event__type-icon" width="17" height="17" src="img/icons/${eventsTypes}.png" alt="Event type icon">
       </label>
       <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -146,7 +145,7 @@ export const createSiteTripPointEditTemplate = (data) => {
 
       <div class="event__photos-container">
         <div class="event__photos-tape">
-          ${pictures.map((it) =>`<img class="event__photo" src="${it}" alt="Event photo">`).join(``)}
+          ${pictures.map((it) =>`<img class="event__photo" src="${it.src}" alt="${it.description}">`).join(``)}
         </div>
       </div>
     </section>
