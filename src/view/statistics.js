@@ -248,9 +248,7 @@ export default class Statistics extends Smart {
   constructor(points) {
     super();
 
-    this._data = {
-      points
-    };
+    this._points = points;
 
     this._moneyChart = null;
     this._transportChart = null;
@@ -274,13 +272,12 @@ export default class Statistics extends Smart {
       this._timeChart = null;
     }
 
-    const {points} = this._data;
     const moneyCtx = this.getElement().querySelector(`.statistics__chart--money`);
     const transportCtx = this.getElement().querySelector(`.statistics__chart--transport`);
     const timeSpendCtx = this.getElement().querySelector(`.statistics__chart--time`);
 
-    this._moneyChart = renderMoneyChart(moneyCtx, points);
-    this._transportChart = renderTransportChart(transportCtx, points);
-    this._timeChart = renderTimeChart(timeSpendCtx, points);
+    this._moneyChart = renderMoneyChart(moneyCtx, this._points);
+    this._transportChart = renderTransportChart(transportCtx, this._points);
+    this._timeChart = renderTimeChart(timeSpendCtx, this._points);
   }
 }

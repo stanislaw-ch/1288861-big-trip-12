@@ -17,6 +17,8 @@ export default class Points extends Observer {
   }
 
   updatePoint(updateType, update) {
+    // console.log(updateType);
+    // console.log(update);
     const index = this._points.findIndex((point) => point.id === update.id);
 
     if (index === -1) {
@@ -64,7 +66,8 @@ export default class Points extends Observer {
           price: point.base_price,
           eventsTypes: point.type,
           startTime: point.date_from,
-          endTime: point.date_to
+          endTime: point.date_to,
+          isFavorite: point.is_favorite
         }
     );
 
@@ -73,6 +76,7 @@ export default class Points extends Observer {
     delete adaptedPoint.type;
     delete adaptedPoint.date_from;
     delete adaptedPoint.date_to;
+    delete adaptedPoint.is_favorite;
 
     return adaptedPoint;
   }
@@ -84,8 +88,9 @@ export default class Points extends Observer {
         {
           "base_price": point.price,
           "type": point.eventsTypes,
-          "startTime": point.date_from,
-          "endTime": point.date_to
+          "date_from": point.startTime,
+          "date_to": point.endTime,
+          "is_favorite": point.isFavorite
         }
     );
 
@@ -94,6 +99,7 @@ export default class Points extends Observer {
     delete adaptedPoint.eventsTypes;
     delete adaptedPoint.startTime;
     delete adaptedPoint.endTime;
+    delete adaptedPoint.isFavorite;
 
     return adaptedPoint;
   }

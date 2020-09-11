@@ -9,6 +9,12 @@ const Mode = {
   EDITING: `EDITING`
 };
 
+export const State = {
+  SAVING: `SAVING`,
+  DELETING: `DELETING`,
+  ABORTING: `ABORTING`
+};
+
 export default class PointPresenter {
   constructor(changeData, changeMode) {
     this._changeData = changeData;
@@ -26,7 +32,7 @@ export default class PointPresenter {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(dayPoint, pointItem) {
+  init(dayPoint, pointItem, offers, destination) {
     this._dayPoint = dayPoint;
     this._pointElement = pointItem;
 
@@ -34,7 +40,7 @@ export default class PointPresenter {
     const prevPointEditComponent = this._pointEditComponent;
 
     this._pointComponent = new TripPoint(pointItem);
-    this._pointEditComponent = new TripPointEdit(pointItem);
+    this._pointEditComponent = new TripPointEdit(pointItem, offers, destination); //
 
     this._pointComponent.setEditClickHandler(this._handleEditClick);
     this._pointEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
@@ -52,7 +58,8 @@ export default class PointPresenter {
     }
 
     if (this._mode === Mode.EDITING) {
-      replace(this._pointEditComponent, prevPointEditComponent);
+      replace(this._pointComponent, prevPointEditComponent);
+      this._mode = Mode.DEFAULT;
     }
 
     remove(prevPointComponent);
@@ -62,6 +69,35 @@ export default class PointPresenter {
   destroy() {
     remove(this._pointComponent);
     remove(this._pointEditComponent);
+  }
+
+  setViewState(state) {
+    const resetFormState = () => {
+      this._pointEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    switch (state) {
+      case State.SAVING:
+        this._pointEditComponent.updateData({
+          isDisabled: true,
+          isSaving: true
+        });
+        break;
+      case State.DELETING:
+        this._pointEditComponent.updateData({
+          isDisabled: true,
+          isDeleting: true
+        });
+        break;
+      case State.ABORTING:
+        this._pointComponent.shake(resetFormState);
+        this._pointEditComponent.shake(resetFormState);
+        break;
+    }
   }
 
   resetView() {
@@ -124,8 +160,6 @@ export default class PointPresenter {
         isMajorUpdate ? UpdateType.MAJOR : UpdateType.MINOR,
         update
     );
-
-    this._replaceFormToPoint();
   }
 
   _handleDeleteClick(point) {
