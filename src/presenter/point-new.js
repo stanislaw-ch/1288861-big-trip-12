@@ -1,6 +1,5 @@
-import PointEditView from "../view/trip-edit.js";
+import PointAdd from "../view/trip-add.js";
 import TripDayContainer from "../view/trip-day-container.js";
-import {generateId} from "../utils/points.js";
 import {remove, render, RenderPosition} from "../utils/render.js";
 import {UserAction, UpdateType} from "../const.js";
 
@@ -9,60 +8,75 @@ export default class PointNew {
     this._pointListContainer = pointListContainer;
     this._changeData = changeData;
 
-    this._pointEditComponent = null;
+    this._pointAddComponent = null;
     this._destroyCallback = null;
     this._dayComponent = new TripDayContainer();
 
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
-    this._handleDeleteClick = this._handleDeleteClick.bind(this);
+    this._handleCancelClick = this._handleCancelClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(callback) {
+  init(callback, offers, destination) {
     this._destroyCallback = callback;
 
-    if (this._pointEditComponent !== null) {
+    if (this._pointAddComponent !== null) {
       return;
     }
 
-    this._pointEditComponent = new PointEditView();
-    this._pointEditComponent.setFormSubmitHandler(this._handleFormSubmit);
-    this._pointEditComponent.setDeleteClickHandler(this._handleDeleteClick);
+    this._pointAddComponent = new PointAdd(this._destroyCallback, offers, destination);
+    this._pointAddComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._pointAddComponent.setCancelClickHandler(this._handleCancelClick);
 
     render(this._pointListContainer, this._dayComponent, RenderPosition.AFTERBEGIN);
     const dayPoint = this._dayComponent.getElement().querySelector(`.trip-events__list`);
-    render(dayPoint, this._pointEditComponent, RenderPosition.AFTERBEGIN);
+    render(dayPoint, this._pointAddComponent, RenderPosition.AFTERBEGIN);
 
     document.addEventListener(`keydown`, this._escKeyDownHandler);
   }
 
   destroy() {
-    if (this._pointEditComponent === null) {
+    if (this._pointAddComponent === null) {
       return;
     }
 
-    if (this._destroyCallback !== null) {
-      this._destroyCallback();
-    }
+    document.querySelector(`.trip-main__event-add-btn`)
+    .disabled = false;
 
-    remove(this._pointEditComponent);
-    this._pointEditComponent = null;
+    remove(this._pointAddComponent);
+    this._pointAddComponent.removeElement();
+    this._pointAddComponent = null;
 
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
+  }
+
+  setSaving() {
+    this._pointAddComponent.updateData({
+      isDisabled: true,
+      isSaving: true
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this._pointAddComponent.updateData({
+        isDisabled: false,
+        isSaving: false
+      });
+    };
+
+    this._pointAddComponent.shake(resetFormState);
   }
 
   _handleFormSubmit(point) {
     this._changeData(
         UserAction.ADD_POINT,
         UpdateType.MAJOR,
-        // Пока у нас нет сервера, который бы после сохранения
-        // выдывал честный id задачи, нам нужно позаботиться об этом самим
-        Object.assign({id: generateId()}, point)
+        point
     );
-    this.destroy();
   }
 
-  _handleDeleteClick() {
+  _handleCancelClick() {
     this.destroy();
   }
 

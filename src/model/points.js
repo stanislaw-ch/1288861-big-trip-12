@@ -64,15 +64,18 @@ export default class Points extends Observer {
           price: point.base_price,
           eventsTypes: point.type,
           startTime: point.date_from,
-          endTime: point.date_to
+          endTime: point.date_to,
+          pictures: point.photos,
+          isFavorite: point.is_favorite
         }
     );
 
-    // Ненужные ключи мы удаляем
     delete adaptedPoint.base_price;
     delete adaptedPoint.type;
     delete adaptedPoint.date_from;
     delete adaptedPoint.date_to;
+    delete adaptedPoint.photos;
+    delete adaptedPoint.is_favorite;
 
     return adaptedPoint;
   }
@@ -84,16 +87,19 @@ export default class Points extends Observer {
         {
           "base_price": point.price,
           "type": point.eventsTypes,
-          "startTime": point.date_from,
-          "endTime": point.date_to
+          "date_from": point.startTime,
+          "date_to": point.endTime,
+          "photos": point.pictures,
+          "is_favorite": point.isFavorite
         }
     );
 
-    // Ненужные ключи мы удаляем
     delete adaptedPoint.price;
     delete adaptedPoint.eventsTypes;
     delete adaptedPoint.startTime;
     delete adaptedPoint.endTime;
+    delete adaptedPoint.pictures;
+    delete adaptedPoint.isFavorite;
 
     return adaptedPoint;
   }

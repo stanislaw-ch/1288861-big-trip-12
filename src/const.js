@@ -27,3 +27,19 @@ export const MenuItem = {
   TABLE: `TABLE`,
   STATISTICS: `STATISTICS`
 };
+
+export const TRIP_TYPES = [
+  `taxi`,
+  `bus`,
+  `train`,
+  `ship`,
+  `transport`,
+  `drive`,
+  `flight`
+];
+
+export const ACTIVITY_TYPES = [
+  `check-in`,
+  `sightseeing`,
+  `restaurant`
+];
