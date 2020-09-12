@@ -110,16 +110,13 @@ export default class TripPresenter {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        // console.log(1);
         this._pointItems[update.id].setViewState(PointPresenterViewState.SAVING);
-        // console.log(2);
-        // console.log(update);
         this._api.updatePoint(update).then((response) => {
           this._pointsModel.updatePoint(updateType, response);
+        })
+        .catch(() => {
+          this._pointItems[update.id].setViewState(PointPresenterViewState.ABORTING);
         });
-        // .catch(() => {
-        //   this._pointItems[update.id].setViewState(PointPresenterViewState.ABORTING);
-        // });
         break;
       case UserAction.ADD_POINT:
         this._pointNewPresenter.setSaving();

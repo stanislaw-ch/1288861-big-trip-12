@@ -37,9 +37,6 @@ export default class Api {
   }
 
   updatePoint(point) {
-    // console.log(`update`);
-    // console.log(point);
-    // console.log(JSON.stringify(PointsModel.adaptToServer(point)));
     return this._load({
       url: `points/${point.id}`,
       method: Method.PUT,

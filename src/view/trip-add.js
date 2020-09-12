@@ -1,4 +1,3 @@
-// import he from "he";
 import SmartView from "./smart.js";
 import {
   getTimeFormat,
@@ -13,7 +12,7 @@ import {
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const BLANK_POINT = {
-  id: generateId(),
+  id: toString(generateId()),
   eventsTypes: `taxi`,
   destination: {
     name: ``,
@@ -183,7 +182,7 @@ export const createSiteTripPointAddTemplate = (
     }
   });
 
-  return `<form class="event  event--edit" action="#" method="post">
+  return `<form class="${pointsData ? `trip-events__item` : ``} event  event--edit" action="#" method="post">
   <header class="event__header">
     <div class="event__type-wrapper">
       <label
@@ -221,7 +220,7 @@ export const createSiteTripPointAddTemplate = (
     <div class="event__field-group  event__field-group--destination">
       <label
         class="event__label  event__type-output"
-        for="event-destination-1">${typePoint} to
+        for="event-destination-${id}">${typePoint} to
       </label>
       <input
         class="event__input  event__input--destination"
@@ -242,7 +241,7 @@ export const createSiteTripPointAddTemplate = (
       </label>
       <input
         class="event__input  event__input--time"
-        id="event-start-time-1"
+        id="event-start-time-${id}"
         type="text" name="event-start-time"
         value="${getTimeFormat(startTime)}"
         ${isDisabled ? `disabled` : ``}
@@ -269,7 +268,7 @@ export const createSiteTripPointAddTemplate = (
       <input
         class="event__input event__input--price"
         id="event-price-${id}"
-        type="text" name="event-price"
+        type="number" name="event-price"
         value="${price}"
         ${isDisabled ? `disabled` : ``}
         >
@@ -449,7 +448,7 @@ export default class TripPointAdd extends SmartView {
   _priceInputHandler(evt) {
     evt.preventDefault();
     this.updateData({
-      price: evt.target.value
+      price: Number(evt.target.value)
     }, true);
   }
 
@@ -505,22 +504,18 @@ export default class TripPointAdd extends SmartView {
   _eventsDestinationClickHandler(evt) {
     evt.preventDefault();
 
-    const name = evt.target.value;
-    const destination = this._destination.find((item) => item.name === name);
+    const destination = this._destination.find((item) => item.name === evt.target.value);
 
     if (!destination) {
       evt.target.setCustomValidity(`Choose a city from the list`);
       return;
     }
 
-    const description = destination.description;
-    const photos = destination.pictures;
-
     this.updateData({
       destination: {
-        name,
-        description,
-        photos
+        name: evt.target.value,
+        description: destination.description,
+        pictures: destination.pictures
       }
     });
   }

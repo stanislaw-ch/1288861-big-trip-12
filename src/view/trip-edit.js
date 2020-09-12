@@ -1,9 +1,7 @@
-// import he from "he";
 import SmartView from "./smart.js";
 import {
   getTimeFormat,
-  capitalizeFirstLetter,
-  generateId
+  capitalizeFirstLetter
 } from '../utils/points.js';
 import flatpickr from "flatpickr";
 import {
@@ -13,7 +11,6 @@ import {
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const BLANK_POINT = {
-  id: generateId(),
   eventsTypes: `taxi`,
   destination: {
     name: ``,
@@ -265,7 +262,8 @@ export const createSiteTripPointEditTemplate = (
         class="event__input
         event__input--time"
         id="event-end-time-${id}"
-        type="text" name="event-end-time"
+        type="text"
+        name="event-end-time"
         value="${getTimeFormat(endTime)}"
         ${isDisabled ? `disabled` : ``}
       >
@@ -279,7 +277,8 @@ export const createSiteTripPointEditTemplate = (
       <input
         class="event__input event__input--price"
         id="event-price-${id}"
-        type="text" name="event-price"
+        type="number"
+        name="event-price"
         value="${price}"
         ${isDisabled ? `disabled` : ``}
         required
@@ -493,7 +492,7 @@ export default class TripPointEdit extends SmartView {
   _priceInputHandler(evt) {
     evt.preventDefault();
     this.updateData({
-      price: evt.target.value
+      price: Number(evt.target.value)
     }, true);
   }
 
@@ -560,7 +559,7 @@ export default class TripPointEdit extends SmartView {
     this.updateData({
       destination: {
         name: evt.target.value,
-        destination: destination.description,
+        description: destination.description,
         pictures: destination.pictures
       }
     });
