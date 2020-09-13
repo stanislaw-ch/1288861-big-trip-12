@@ -75,7 +75,7 @@ export default class TripPresenter {
   }
 
   createPoint(callback) {
-    this._pointNewPresenter.init(callback, this._getDestination(), this._getOffers());
+    this._pointNewPresenter.init(callback, this._getOffers(), this._getDestination());
   }
 
   _getOffers() {

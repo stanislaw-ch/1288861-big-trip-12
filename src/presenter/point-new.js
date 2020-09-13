@@ -1,4 +1,4 @@
-import PointAdd from "../view/trip-add.js";
+import PointAdd from "../view/trip-edit.js";
 import TripDayContainer from "../view/trip-day-container.js";
 import {remove, render, RenderPosition} from "../utils/render.js";
 import {UserAction, UpdateType} from "../const.js";
@@ -61,7 +61,8 @@ export default class PointNewPresenter {
     const resetFormState = () => {
       this._pointAddComponent.updateData({
         isDisabled: false,
-        isSaving: false
+        isSaving: false,
+        isDeleting: false
       });
     };
 
