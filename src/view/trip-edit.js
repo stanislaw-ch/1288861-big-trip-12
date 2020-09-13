@@ -3,7 +3,6 @@ import moment from "moment";
 import {
   getTimeFormat,
   capitalizeFirstLetter,
-  // generateId,
   getToday
 } from '../utils/points.js';
 import flatpickr from "flatpickr";
@@ -14,7 +13,6 @@ import {
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const BLANK_POINT = {
-  // id: toString(generateId()),
   eventsTypes: `taxi`,
   destination: {
     name: ``,
