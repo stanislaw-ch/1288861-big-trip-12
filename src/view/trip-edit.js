@@ -1,7 +1,9 @@
 import SmartView from "./smart.js";
+import moment from "moment";
 import {
   getTimeFormat,
-  capitalizeFirstLetter
+  capitalizeFirstLetter,
+  getToday
 } from '../utils/points.js';
 import flatpickr from "flatpickr";
 import {
@@ -17,8 +19,8 @@ const BLANK_POINT = {
     description: ``,
     pictures: [],
   },
-  startTime: getTimeFormat(new Date()),
-  endTime: getTimeFormat(new Date()),
+  startTime: getToday(),
+  endTime: getToday(),
   price: ``,
   offers: [],
   isFavorite: false
@@ -447,21 +449,39 @@ export default class TripPointEdit extends SmartView {
   }
 
   _startDateChangeHandler([userDate]) {
-    if (userDate !== this._data.startTime) {
-      this.updateData({
-        startTime: userDate,
-        endTime: this._data.endTime,
-      }, true);
+    const date = userDate.toISOString();
+    let end = this._data.endTime;
+
+    if (userDate > moment(end)) {
+      const timeEndElement = this.getElement()
+        .querySelector(`input[name="event-end-time"]`);
+
+      end = date;
+      timeEndElement.value = moment(end).format(`DD/MM/YY HH:mm`);
     }
+
+    this.updateData({
+      startTime: date,
+      endTime: end,
+    });
   }
 
   _endDateChangeHandler([userDate]) {
-    if (userDate !== this._data.endTime) {
-      this.updateData({
-        startTime: this._data.startTime,
-        endTime: userDate
-      }, true);
+    const date = userDate.toISOString();
+    let start = this._data.startTime;
+
+    if (userDate < moment(start)) {
+      const timeStartElement = this.getElement()
+        .querySelector(`input[name="event-start-time"]`);
+
+      start = date;
+      timeStartElement.value = moment(start).format(`DD/MM/YY HH:mm`);
     }
+
+    this.updateData({
+      startTime: start,
+      endTime: date
+    }, true);
   }
 
   _setInnerHandlers() {
@@ -491,6 +511,12 @@ export default class TripPointEdit extends SmartView {
 
   _priceInputHandler(evt) {
     evt.preventDefault();
+
+    if (!evt.target.value) {
+      evt.target.setCustomValidity(`Enter the cost of the trip`);
+      return;
+    }
+
     this.updateData({
       price: Number(evt.target.value)
     }, true);
@@ -503,7 +529,6 @@ export default class TripPointEdit extends SmartView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    // console.log(TripPointEdit.parseDataToPoint(this._data));
     this._callback.formSubmit(TripPointEdit.parseDataToPoint(this._data));
   }
 

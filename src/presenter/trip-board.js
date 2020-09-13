@@ -8,8 +8,8 @@ import NoTripPoints from "../view/trip-no-points.js";
 import LoadingView from "../view/loading.js";
 import PointPresenter, {State as PointPresenterViewState} from "./point.js";
 import PointNewPresenter from "./point-new.js";
+import TripInfoPresenter from "./trip-info.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
-import {getDayFormat} from '../utils/points.js';
 import {sortTimeDown, sortPriceDown} from "../utils/points.js";
 import {filter} from "../utils/filter.js";
 import {MenuItem, SortType, UpdateType, UserAction, FilterType} from "../const.js";
@@ -32,6 +32,7 @@ export default class TripPresenter {
     this._destinationModel = destinationModel;
     this._currentSortType = SortType.DEFAULT;
     this._pointItems = {};
+    this._tripInfoPresenter = {};
     this._isLoading = true;
     this._api = api;
 
@@ -142,10 +143,14 @@ export default class TripPresenter {
   _handleModelEvent(updateType, pointItem, dayPoint) {
     switch (updateType) {
       case UpdateType.MINOR:
+        this._tripInfoPresenter.destroy();
         this._pointItems[pointItem.id].init(dayPoint, pointItem, this._getOffers(), this._getDestination());
+        this._renderTripInfo();
         break;
       case UpdateType.MAJOR:
+        this._tripInfoPresenter.destroy();
         this._clearTripBoard();
+        this._renderTripInfo();
         this._renderTrip();
         this._renderSort();
         this._sortComponent.getElement().querySelector(`.trip-sort__item--day`).innerHTML = `Day`;
@@ -154,6 +159,7 @@ export default class TripPresenter {
         this._isLoading = false;
         this._newTripBtnComponent.getElement().disabled = false;
         remove(this._loadingComponent);
+        this._renderTripInfo();
         this._renderTrip();
         break;
     }
@@ -196,6 +202,15 @@ export default class TripPresenter {
     }
   }
 
+  _renderTripInfo() {
+    const tripMainElement = document.querySelector(`.trip-main`);
+    const tripInfoPresenter = new TripInfoPresenter(tripMainElement);
+
+    this._tripInfoPresenter = tripInfoPresenter;
+
+    tripInfoPresenter.init(this._pointsModel.getPoints());
+  }
+
   _renderSort() {
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
     render(this._boardComponent, this._sortComponent, RenderPosition.BEFOREBEGIN);
@@ -221,7 +236,7 @@ export default class TripPresenter {
 
   _renderPoints() {
     const sortDates = new Set(this._getPoints()
-      .map((pointItem) => getDayFormat(pointItem.startTime))
+      .map((pointItem) => new Date(pointItem.startTime))
       .sort((elem1, elem2) => elem1 > elem2 ? 1 : -1));
 
     for (let date of sortDates) {
@@ -230,7 +245,7 @@ export default class TripPresenter {
       render(this._boardComponent, dayComponent, RenderPosition.BEFOREEND);
       const dayPoint = dayComponent.getElement().querySelector(`.trip-events__list`);
 
-      const dayEvents = this._getPoints().filter((pointItem) => getDayFormat(pointItem.startTime) === date);
+      const dayEvents = this._getPoints().filter((pointItem) => pointItem.startTime === date.toISOString());
 
       dayEvents.forEach((pointItem) => this._renderPoint(dayPoint, pointItem));
     }
@@ -258,6 +273,7 @@ export default class TripPresenter {
       this._newTripBtnComponent.getElement().disabled = true;
       return;
     } else if (this._getPoints().length !== 0) {
+      // this._renderTripInfo();
       this._renderPoints();
     } else {
       this._renderNoPoints();

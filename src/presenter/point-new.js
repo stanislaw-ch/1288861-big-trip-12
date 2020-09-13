@@ -3,7 +3,7 @@ import TripDayContainer from "../view/trip-day-container.js";
 import {remove, render, RenderPosition} from "../utils/render.js";
 import {UserAction, UpdateType} from "../const.js";
 
-export default class PointNew {
+export default class PointNewPresenter {
   constructor(pointListContainer, changeData) {
     this._pointListContainer = pointListContainer;
     this._changeData = changeData;

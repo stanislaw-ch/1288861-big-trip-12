@@ -7,10 +7,24 @@ import OffersModel from "./model/offers.js";
 import SiteMenuModel from "./model/site-menu.js";
 import DestinationModel from "./model/destination.js";
 import {UpdateType} from "./const.js";
-import Api from "./api.js";
+import Api from "./api/index.js";
+import Store from "./api/store.js";
+import Provider from "./api/provider.js";
 
 const AUTHORIZATION = `Basic oo1iu2ygf`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
+const STORE_PREFIX = `bigtrip-localstorage`;
+const STORE_VER = `v12`;
+
+const StoreType = {
+  POINTS: `points`,
+  OFFERS: `offers`,
+  DESTINATION: `destination`
+};
+
+const STORE_POINTS = `${STORE_PREFIX}-${StoreType.POINTS}-${STORE_VER}`;
+const STORE_OFFERS = `${STORE_PREFIX}-${StoreType.OFFERS}-${STORE_VER}`;
+const STORE_DESTINATION = `${STORE_PREFIX}-${StoreType.DESTINATION}-${STORE_VER}`;
 
 const siteHeaderElement = document.querySelector(`.page-header`);
 const siteMainElement = document.querySelector(`.page-body__page-main`);
@@ -19,6 +33,15 @@ const siteControlsElement = siteHeaderElement.querySelector(`.trip-controls`);
 const siteFilter = siteHeaderElement.querySelector(`.trip-main__trip-controls`);
 
 const api = new Api(END_POINT, AUTHORIZATION);
+
+const storePoints = new Store(STORE_POINTS, window.localStorage);
+const storeOffers = new Store(STORE_OFFERS, window.localStorage);
+const storeDestination = new Store(STORE_DESTINATION, window.localStorage);
+
+const apiPointsWithProvider = new Provider(api, storePoints);
+const apiOffersWithProvider = new Provider(api, storeOffers);
+const apiDestinationWithProvider = new Provider(api, storeDestination);
+
 const pointsModel = new PointsModel();
 const filterModel = new FilterModel();
 const offersModel = new OffersModel();
@@ -41,34 +64,51 @@ const tripPresenter = new TripPresenter(
     filterModel,
     destinationModel,
     siteMenuModel,
-    api);
+    apiPointsWithProvider);
 
 siteMenuPresenter.init();
 filterPresenter.init();
 tripPresenter.init();
 
-api.getOffers()
+apiOffersWithProvider.getOffers()
   .then((offers) => {
     offersModel.setOffers(offers);
 
-    api.getPoints()
+    apiPointsWithProvider.getPoints()
       .then((points) => {
         pointsModel.setPoints(UpdateType.INIT, points);
-      });
-    // .catch(() => {
-    //   pointsModel.setPoints(UpdateType.INIT, []);
-    // });
+      })
+    .catch(() => {
+      pointsModel.setPoints(UpdateType.INIT, []);
+    });
 
-  });
-// .catch(() => {
-//   offersModel.setOffers([]);
-// });
+  })
+.catch(() => {
+  offersModel.setOffers([]);
+});
 
-api.getDestination()
+apiDestinationWithProvider.getDestination()
   .then((destination) => {
     destinationModel.setDestination(destination);
-  });
-// .catch(() => {
-//   destinationModel.setDestination([]);
-// });
+  })
+.catch(() => {
+  destinationModel.setDestination([]);
+});
 
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`)
+    .then(() => {
+      console.log(`ServiceWorker available`); // eslint-disable-line
+    }).catch(() => {
+      console.error(`ServiceWorker isn't available`); // eslint-disable-line
+    });
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+  apiPointsWithProvider.sync();
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});
