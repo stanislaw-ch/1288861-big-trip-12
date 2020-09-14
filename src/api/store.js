@@ -6,7 +6,7 @@ export default class Store {
 
   getPointsItems() {
     try {
-      return JSON.parse(this._storage.getItem(this._storeKey)).pointsItems || {};
+      return JSON.parse(this._storage.getItem(this._storeKey)) || {};
     } catch (err) {
       return {};
     }
@@ -14,7 +14,7 @@ export default class Store {
 
   getOffersItems() {
     try {
-      return JSON.parse(this._storage.getItem(this._storeKey)).offersItems || {};
+      return JSON.parse(this._storage.getItem(this._storeKey)) || {};
     } catch (err) {
       return {};
     }
@@ -22,13 +22,27 @@ export default class Store {
 
   getDestinationsItems() {
     try {
-      return JSON.parse(this._storage.getItem(this._storeKey)).destinationsItems || {};
+      return JSON.parse(this._storage.getItem(this._storeKey)) || {};
     } catch (err) {
       return {};
     }
   }
 
-  setItems(items) {
+  setOffersItems(items) {
+    this._storage.setItem(
+        this._storeKey,
+        JSON.stringify(items)
+    );
+  }
+
+  setDestinationsItems(items) {
+    this._storage.setItem(
+        this._storeKey,
+        JSON.stringify(items)
+    );
+  }
+
+  setPointsItems(items) {
     this._storage.setItem(
         this._storeKey,
         JSON.stringify(items)
@@ -57,20 +71,5 @@ export default class Store {
         this._storeKey,
         JSON.stringify(store)
     );
-  }
-
-  setStaticDataByKey(key, data) {
-    this._storage.setItem(
-        key,
-        JSON.stringify(data)
-    );
-  }
-
-  getStaticDataByKey(key) {
-    try {
-      return JSON.parse(this._storage.getItem(key)) || [];
-    } catch (err) {
-      return [];
-    }
   }
 }

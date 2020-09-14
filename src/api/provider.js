@@ -35,7 +35,7 @@ export default class Provider {
         .then((offers) => {
           const offersItems = createStoreStructure(offers);
           const items = {offersItems};
-          this._store.setItems(items);
+          this._store.setOffersItems(items);
           return offers;
         });
     }
@@ -50,7 +50,7 @@ export default class Provider {
         .then((destination) => {
           const destinationsItems = createStoreStructure(destination);
           const items = {destinationsItems};
-          this._store.setItems(items);
+          this._store.setDestinationsItems(items);
           return destination;
         });
     }
@@ -66,7 +66,7 @@ export default class Provider {
         .then((points) => {
           const pointsItems = createStoreStructure(points.map(PointsModel.adaptToServer));
           const items = {pointsItems};
-          this._store.setItems(items);
+          this._store.setPointsItems(items);
           return points;
         });
     }
