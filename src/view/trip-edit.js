@@ -107,7 +107,7 @@ const createOfferTemplate = (offer, check, id) => {
 const addOfferTemplate = (point, offersData) => {
   const {eventsTypes, offers, id} = point;
 
-  let offersTemplate = [];
+  const offersTemplate = [];
 
   const offer = offersData.find((item) => item.type === eventsTypes);
 
@@ -390,10 +390,6 @@ export default class TripPointEdit extends SmartView {
 
   static parseDataToPoint(data) {
     data = Object.assign({}, data);
-
-    if (data.isFavorite) {
-      data.isFavorite = true;
-    }
 
     delete data.isDisabled;
     delete data.isSaving;

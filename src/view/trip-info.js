@@ -25,7 +25,7 @@ export const createSiteTripInfoTemplate = (points) => {
   const startDay = startDate.getDate() + `&nbsp;&mdash;&nbsp;`;
   const endDay = endDate.getDate();
 
-  let checkMonth = () => {
+  const checkMonth = () => {
     if (startMonth === endMonth) {
       return ``;
     }

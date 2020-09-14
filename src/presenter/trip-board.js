@@ -13,7 +13,7 @@ import {render, RenderPosition, remove} from "../utils/render.js";
 import {sortTimeDown, sortPriceDown} from "../utils/points.js";
 import {filter} from "../utils/filter.js";
 import {MenuItem, SortType, UpdateType, UserAction, FilterType} from "../const.js";
-
+import moment from "moment";
 export default class TripPresenter {
   constructor(
       tripContainer,
@@ -83,7 +83,7 @@ export default class TripPresenter {
   }
 
   _getDestination() {
-    return this._destinationModel.getDestination();
+    return this._destinationModel.getDestinations();
   }
 
   _getPoints() {
@@ -236,7 +236,7 @@ export default class TripPresenter {
 
   _renderPoints() {
     const sortDates = new Set(this._getPoints()
-      .map((pointItem) => new Date(pointItem.startTime))
+      .map((pointItem) => moment(pointItem.startTime).format(`YYYY-MM-DD`))
       .sort((elem1, elem2) => elem1 > elem2 ? 1 : -1));
 
     for (let date of sortDates) {
@@ -245,7 +245,7 @@ export default class TripPresenter {
       render(this._boardComponent, dayComponent, RenderPosition.BEFOREEND);
       const dayPoint = dayComponent.getElement().querySelector(`.trip-events__list`);
 
-      const dayEvents = this._getPoints().filter((pointItem) => pointItem.startTime === date.toISOString());
+      const dayEvents = this._getPoints().filter((pointItem) => moment(pointItem.startTime).format(`YYYY-MM-DD`) === date);
 
       dayEvents.forEach((pointItem) => this._renderPoint(dayPoint, pointItem));
     }

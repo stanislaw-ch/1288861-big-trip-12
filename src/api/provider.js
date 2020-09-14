@@ -1,6 +1,12 @@
 import {nanoid} from "nanoid";
 import PointsModel from "../model/points.js";
 
+// const StoreTitle = {
+//   EVENTS: `Points`,
+//   OFFERS: `Offers`,
+//   DESTINATIONS: `Destinations`,
+// };
+
 const getSyncedTasks = (items) => {
   return items.filter(({success}) => success)
     .map(({payload}) => payload.point);
@@ -27,27 +33,29 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.getOffers()
         .then((offers) => {
-          const items = createStoreStructure(offers);
-          this._store.setOfferItems(items);
+          const offersItems = createStoreStructure(offers);
+          const items = {offersItems};
+          this._store.setItems(items);
           return offers;
         });
     }
-    const storeOffers = Object.values(this._store.getOfferItems());
+    const storeOffers = Object.values(this._store.getOffersItems());
 
     return Promise.resolve(storeOffers.slice());
   }
 
-  getDestination() {
+  getDestinations() {
     if (Provider.isOnline()) {
-      return this._api.getDestination()
+      return this._api.getDestinations()
         .then((destination) => {
-          const items = createStoreStructure(destination);
-          this._store.setDestinationItems(items);
+          const destinationsItems = createStoreStructure(destination);
+          const items = {destinationsItems};
+          this._store.setItems(items);
           return destination;
         });
     }
 
-    const storeDestination = Object.values(this._store.getDestinationItems());
+    const storeDestination = Object.values(this._store.getDestinationsItems());
 
     return Promise.resolve(storeDestination.slice());
   }
@@ -56,13 +64,14 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.getPoints()
         .then((points) => {
-          const items = createStoreStructure(points.map(PointsModel.adaptToServer));
+          const pointsItems = createStoreStructure(points.map(PointsModel.adaptToServer));
+          const items = {pointsItems};
           this._store.setItems(items);
           return points;
         });
     }
 
-    const storePoints = Object.values(this._store.getItems());
+    const storePoints = Object.values(this._store.getPointsItems());
 
     return Promise.resolve(storePoints.map(PointsModel.adaptToClient));
   }

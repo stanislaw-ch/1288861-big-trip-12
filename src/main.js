@@ -11,7 +11,7 @@ import Api from "./api/index.js";
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
 
-const AUTHORIZATION = `Basic oo1iu2ygf`;
+const AUTHORIZATION = `Basic oo1iu2ygfzg`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 const STORE_PREFIX = `bigtrip-localstorage`;
 const STORE_VER = `v12`;
@@ -22,9 +22,10 @@ const StoreType = {
   DESTINATION: `destination`
 };
 
-const STORE_POINTS = `${STORE_PREFIX}-${StoreType.POINTS}-${STORE_VER}`;
-const STORE_OFFERS = `${STORE_PREFIX}-${StoreType.OFFERS}-${STORE_VER}`;
-const STORE_DESTINATION = `${STORE_PREFIX}-${StoreType.DESTINATION}-${STORE_VER}`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
+// const STORE_POINTS = `${STORE_PREFIX}-${StoreType.POINTS}-${STORE_VER}`;
+// const STORE_OFFERS = `${STORE_PREFIX}-${StoreType.OFFERS}-${STORE_VER}`;
+// const STORE_DESTINATION = `${STORE_PREFIX}-${StoreType.DESTINATION}-${STORE_VER}`;
 
 const siteHeaderElement = document.querySelector(`.page-header`);
 const siteMainElement = document.querySelector(`.page-body__page-main`);
@@ -34,13 +35,15 @@ const siteFilter = siteHeaderElement.querySelector(`.trip-main__trip-controls`);
 
 const api = new Api(END_POINT, AUTHORIZATION);
 
-const storePoints = new Store(STORE_POINTS, window.localStorage);
-const storeOffers = new Store(STORE_OFFERS, window.localStorage);
-const storeDestination = new Store(STORE_DESTINATION, window.localStorage);
+const store = new Store(STORE_NAME, window.localStorage);
+// const storePoints = new Store(STORE_POINTS, window.localStorage);
+// const storeOffers = new Store(STORE_OFFERS, window.localStorage);
+// const storeDestination = new Store(STORE_DESTINATION, window.localStorage);
 
-const apiPointsWithProvider = new Provider(api, storePoints);
-const apiOffersWithProvider = new Provider(api, storeOffers);
-const apiDestinationWithProvider = new Provider(api, storeDestination);
+const apiWithProvider = new Provider(api, store);
+// const apiPointsWithProvider = new Provider(api, storePoints);
+// const apiOffersWithProvider = new Provider(api, storeOffers);
+// const apiDestinationWithProvider = new Provider(api, storeDestination);
 
 const pointsModel = new PointsModel();
 const filterModel = new FilterModel();
@@ -64,17 +67,17 @@ const tripPresenter = new TripPresenter(
     filterModel,
     destinationModel,
     siteMenuModel,
-    apiPointsWithProvider);
+    apiWithProvider);
 
 siteMenuPresenter.init();
 filterPresenter.init();
 tripPresenter.init();
 
-apiOffersWithProvider.getOffers()
+apiWithProvider.getOffers()
   .then((offers) => {
     offersModel.setOffers(offers);
 
-    apiPointsWithProvider.getPoints()
+    apiWithProvider.getPoints()
       .then((points) => {
         pointsModel.setPoints(UpdateType.INIT, points);
       })
@@ -87,9 +90,9 @@ apiOffersWithProvider.getOffers()
   offersModel.setOffers([]);
 });
 
-apiDestinationWithProvider.getDestination()
+apiWithProvider.getDestinations()
   .then((destination) => {
-    destinationModel.setDestination(destination);
+    destinationModel.setDestinations(destination);
   })
 .catch(() => {
   destinationModel.setDestination([]);
@@ -106,7 +109,7 @@ window.addEventListener(`load`, () => {
 
 window.addEventListener(`online`, () => {
   document.title = document.title.replace(` [offline]`, ``);
-  apiPointsWithProvider.sync();
+  apiWithProvider.sync();
 });
 
 window.addEventListener(`offline`, () => {

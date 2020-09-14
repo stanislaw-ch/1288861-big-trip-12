@@ -30,7 +30,7 @@ export default class Api {
     .then((points) => points.map(PointsModel.adaptToClient));
   }
 
-  getDestination() {
+  getDestinations() {
     return this._load({url: `destinations`})
       .then(Api.toJSON)
       .then((destination) => destination.slice());

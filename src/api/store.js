@@ -4,42 +4,28 @@ export default class Store {
     this._storeKey = key;
   }
 
-  getOfferItems() {
+  getPointsItems() {
     try {
-      return JSON.parse(this._storage.getItem(this._storeKey)) || {};
+      return JSON.parse(this._storage.getItem(this._storeKey)).pointsItems || {};
     } catch (err) {
       return {};
     }
   }
 
-  getDestinationItems() {
+  getOffersItems() {
     try {
-      return JSON.parse(this._storage.getItem(this._storeKey)) || {};
+      return JSON.parse(this._storage.getItem(this._storeKey)).offersItems || {};
     } catch (err) {
       return {};
     }
   }
 
-  getItems() {
+  getDestinationsItems() {
     try {
-      return JSON.parse(this._storage.getItem(this._storeKey)) || {};
+      return JSON.parse(this._storage.getItem(this._storeKey)).destinationsItems || {};
     } catch (err) {
       return {};
     }
-  }
-
-  setOfferItems(items) {
-    this._storage.setItem(
-        this._storeKey,
-        JSON.stringify(items)
-    );
-  }
-
-  setDestinationItems(items) {
-    this._storage.setItem(
-        this._storeKey,
-        JSON.stringify(items)
-    );
   }
 
   setItems(items) {
@@ -71,5 +57,20 @@ export default class Store {
         this._storeKey,
         JSON.stringify(store)
     );
+  }
+
+  setStaticDataByKey(key, data) {
+    this._storage.setItem(
+        key,
+        JSON.stringify(data)
+    );
+  }
+
+  getStaticDataByKey(key) {
+    try {
+      return JSON.parse(this._storage.getItem(key)) || [];
+    } catch (err) {
+      return [];
+    }
   }
 }
