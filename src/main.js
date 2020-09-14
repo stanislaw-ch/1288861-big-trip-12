@@ -16,11 +16,11 @@ const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 const STORE_PREFIX = `bigtrip-localstorage`;
 const STORE_VER = `v12`;
 
-const StoreType = {
-  POINTS: `points`,
-  OFFERS: `offers`,
-  DESTINATION: `destination`
-};
+// const StoreType = {
+//   POINTS: `points`,
+//   OFFERS: `offers`,
+//   DESTINATION: `destination`
+// };
 
 const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 // const STORE_POINTS = `${STORE_PREFIX}-${StoreType.POINTS}-${STORE_VER}`;
