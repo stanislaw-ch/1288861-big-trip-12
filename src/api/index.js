@@ -1,4 +1,4 @@
-import PointsModel from "./model/points.js";
+import PointsModel from "../model/points.js";
 
 const Method = {
   GET: `GET`,
@@ -30,7 +30,7 @@ export default class Api {
     .then((points) => points.map(PointsModel.adaptToClient));
   }
 
-  getDestination() {
+  getDestinations() {
     return this._load({url: `destinations`})
       .then(Api.toJSON)
       .then((destination) => destination.slice());
@@ -63,6 +63,16 @@ export default class Api {
       url: `points/${point.id}`,
       method: Method.DELETE
     });
+  }
+
+  sync(data) {
+    return this._load({
+      url: `points/sync`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then(Api.toJSON);
   }
 
   _load({

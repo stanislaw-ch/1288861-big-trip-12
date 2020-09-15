@@ -1,9 +1,9 @@
-import PointAdd from "../view/trip-add.js";
+import PointAdd from "../view/trip-edit.js";
 import TripDayContainer from "../view/trip-day-container.js";
 import {remove, render, RenderPosition} from "../utils/render.js";
 import {UserAction, UpdateType} from "../const.js";
 
-export default class PointNew {
+export default class PointNewPresenter {
   constructor(pointListContainer, changeData) {
     this._pointListContainer = pointListContainer;
     this._changeData = changeData;
@@ -61,7 +61,8 @@ export default class PointNew {
     const resetFormState = () => {
       this._pointAddComponent.updateData({
         isDisabled: false,
-        isSaving: false
+        isSaving: false,
+        isDeleting: false
       });
     };
 

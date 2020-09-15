@@ -6,7 +6,7 @@ import {MenuItem} from "../const.js";
 
 const {BEFOREEND} = RenderPosition;
 
-export default class SiteMenu {
+export default class SiteMenuPresenter {
   constructor(siteMenuContainer, siteMenuModel) {
     this._siteMenuContainer = siteMenuContainer;
     this._siteMenuModel = siteMenuModel;

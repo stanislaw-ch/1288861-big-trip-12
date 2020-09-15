@@ -1,7 +1,9 @@
 import SmartView from "./smart.js";
+import moment from "moment";
 import {
   getTimeFormat,
-  capitalizeFirstLetter
+  capitalizeFirstLetter,
+  getToday
 } from '../utils/points.js';
 import flatpickr from "flatpickr";
 import {
@@ -17,8 +19,8 @@ const BLANK_POINT = {
     description: ``,
     pictures: [],
   },
-  startTime: getTimeFormat(new Date()),
-  endTime: getTimeFormat(new Date()),
+  startTime: getToday(),
+  endTime: getToday(),
   price: ``,
   offers: [],
   isFavorite: false
@@ -105,7 +107,7 @@ const createOfferTemplate = (offer, check, id) => {
 const addOfferTemplate = (point, offersData) => {
   const {eventsTypes, offers, id} = point;
 
-  let offersTemplate = [];
+  const offersTemplate = [];
 
   const offer = offersData.find((item) => item.type === eventsTypes);
 
@@ -157,10 +159,36 @@ const createDesinationTemplate = (description, photos) => {
   );
 };
 
+const createTripFavoriteButtonTemplate = (isNew, isFavorite, isDisabled, pointsData) => {
+
+  return !isNew ? (
+    `<input
+    id="event-favorite-${pointsData.id}"
+    class="event__favorite-checkbox  visually-hidden"
+    type="checkbox"
+    name="event-favorite"
+    ${setFavorite(isFavorite)}
+    ${isDisabled ? `disabled` : ``}
+  />
+  <label class="event__favorite-btn" for="event-favorite-${pointsData.id}">
+    <span class="visually-hidden">Add to favorite</span>
+    <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+      <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+    </svg>
+  </label>
+
+  <button class="event__rollup-btn" type="button">
+    <span class="visually-hidden">Open event</span>
+  </button>`
+  )
+    : ``;
+};
+
 export const createSiteTripPointEditTemplate = (
     pointsData,
     offersData,
-    destination) => {
+    destination,
+    isNew) => {
 
   const {
     id,
@@ -189,6 +217,8 @@ export const createSiteTripPointEditTemplate = (
       description = item.description;
     }
   });
+
+  const stateDeleteButton = isDeleting ? `Deleting...` : `Delete`;
 
   return `<form class="${pointsData ? `trip-events__item` : ``} event  event--edit" action="#" method="post">
   <header class="event__header">
@@ -295,27 +325,10 @@ export const createSiteTripPointEditTemplate = (
       class="event__reset-btn"
       type="reset" ${isDisabled ? `disabled` : ``}
       >
-      ${isDeleting ? `deleting...` : `delete`}
+      ${isNew ? `Cancel` : stateDeleteButton}
     </button>
 
-    <input
-      id="event-favorite-${id}"
-      class="event__favorite-checkbox  visually-hidden"
-      type="checkbox"
-      name="event-favorite"
-      ${setFavorite(isFavorite)}
-      ${isDisabled ? `disabled` : ``}
-    />
-    <label class="event__favorite-btn" for="event-favorite-${id}">
-      <span class="visually-hidden">Add to favorite</span>
-      <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
-        <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
-      </svg>
-    </label>
-
-    <button class="event__rollup-btn" type="button">
-      <span class="visually-hidden">Open event</span>
-    </button>
+    ${createTripFavoriteButtonTemplate(isNew, isFavorite, isDisabled, pointsData)}
   </header>
 
   <section class="event__details">
@@ -331,8 +344,13 @@ export const createSiteTripPointEditTemplate = (
 };
 
 export default class TripPointEdit extends SmartView {
-  constructor(data = BLANK_POINT, offers, destination) {
+  constructor(data, offers, destination) {
     super();
+    if (!data) {
+      data = BLANK_POINT;
+      this._isNew = true;
+    }
+
     this._data = TripPointEdit.parsePointToData(data);
     this._datepickerStart = null;
     this._datepickerEnd = null;
@@ -341,6 +359,8 @@ export default class TripPointEdit extends SmartView {
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
+    this._formCancelClickHandler = this._formCancelClickHandler.bind(this);
+
     this._editClickHandler = this._editClickHandler.bind(this);
     this._favoriteToggleHandler = this._favoriteToggleHandler.bind(this);
 
@@ -399,7 +419,7 @@ export default class TripPointEdit extends SmartView {
   }
 
   getTemplate() {
-    return createSiteTripPointEditTemplate(this._data, this._offers, this._destination);
+    return createSiteTripPointEditTemplate(this._data, this._offers, this._destination, this._isNew);
   }
 
   restoreHandlers() {
@@ -408,6 +428,7 @@ export default class TripPointEdit extends SmartView {
     this.setEditClickHandler(this._callback.editClick);
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setDeleteClickHandler(this._callback.deleteClick);
+    this.setCancelClickHandler(this._callback.cancelClick);
   }
 
   _setDatepicker() {
@@ -420,54 +441,70 @@ export default class TripPointEdit extends SmartView {
 
     if (this._data) {
       this._datepickerStart = flatpickr(
-          this.getElement()
-          .querySelector(`.event__input--time:first-of-type`),
+          this.getElement().querySelector(`.event__input--time:first-of-type`),
           {
-            enableTime: true,
-            /* eslint-disable-next-line */
-            time_24hr: true,
-            dateFormat: `d/m/y H:i`,
-            defaultDate: this._data.startTime,
-            onChange: this._startDateChangeHandler
+            "enableTime": true,
+            "time_24hr": true,
+            "dateFormat": `d/m/y H:i`,
+            "defaultDate": this._data.startTime,
+            "onChange": this._startDateChangeHandler
           }
       );
       this._datepickerEnd = flatpickr(
-          this.getElement()
-          .querySelector(`.event__input--time:last-of-type`),
+          this.getElement().querySelector(`.event__input--time:last-of-type`),
           {
-            enableTime: true,
-            /* eslint-disable-next-line */
-            time_24hr: true,
-            dateFormat: `d/m/y H:i`,
-            defaultDate: this._data.endTime,
-            onChange: this._endDateChangeHandler
+            "enableTime": true,
+            "time_24hr": true,
+            "dateFormat": `d/m/y H:i`,
+            "defaultDate": this._data.endTime,
+            "onChange": this._endDateChangeHandler
           }
       );
     }
   }
 
   _startDateChangeHandler([userDate]) {
-    if (userDate !== this._data.startTime) {
-      this.updateData({
-        startTime: userDate,
-        endTime: this._data.endTime,
-      }, true);
+    const date = userDate.toISOString();
+    let end = this._data.endTime;
+
+    if (userDate > moment(end)) {
+      const timeEndElement = this.getElement()
+        .querySelector(`input[name="event-end-time"]`);
+
+      end = date;
+      timeEndElement.value = moment(end).format(`DD/MM/YY HH:mm`);
     }
+
+    this.updateData({
+      startTime: date,
+      endTime: end,
+    });
   }
 
   _endDateChangeHandler([userDate]) {
-    if (userDate !== this._data.endTime) {
-      this.updateData({
-        startTime: this._data.startTime,
-        endTime: userDate
-      }, true);
+    const date = userDate.toISOString();
+    let start = this._data.startTime;
+
+    if (userDate < moment(start)) {
+      const timeStartElement = this.getElement()
+        .querySelector(`input[name="event-start-time"]`);
+
+      start = date;
+      timeStartElement.value = moment(start).format(`DD/MM/YY HH:mm`);
     }
+
+    this.updateData({
+      startTime: start,
+      endTime: date
+    }, true);
   }
 
   _setInnerHandlers() {
-    this.getElement()
-      .querySelector(`.event__favorite-btn`)
-      .addEventListener(`click`, this._favoriteToggleHandler);
+    if (!this._isNew) {
+      this.getElement()
+        .querySelector(`.event__favorite-btn`)
+        .addEventListener(`click`, this._favoriteToggleHandler);
+    }
     this.getElement()
       .querySelector(`.event__input--price`)
       .addEventListener(`input`, this._priceInputHandler);
@@ -491,6 +528,12 @@ export default class TripPointEdit extends SmartView {
 
   _priceInputHandler(evt) {
     evt.preventDefault();
+
+    if (!evt.target.value) {
+      evt.target.setCustomValidity(`Enter the cost of the trip`);
+      return;
+    }
+
     this.updateData({
       price: Number(evt.target.value)
     }, true);
@@ -503,8 +546,12 @@ export default class TripPointEdit extends SmartView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    // console.log(TripPointEdit.parseDataToPoint(this._data));
     this._callback.formSubmit(TripPointEdit.parseDataToPoint(this._data));
+  }
+
+  _formCancelClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.cancelClick(TripPointEdit.parseDataToPoint(this._data));
   }
 
   _formDeleteClickHandler(evt) {
@@ -566,8 +613,10 @@ export default class TripPointEdit extends SmartView {
   }
 
   setEditClickHandler(callback) {
-    this._callback.editClick = callback;
-    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._editClickHandler);
+    if (!this._isNew) {
+      this._callback.editClick = callback;
+      this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._editClickHandler);
+    }
   }
 
   setFormSubmitHandler(callback) {
@@ -583,5 +632,10 @@ export default class TripPointEdit extends SmartView {
   setDeleteClickHandler(callback) {
     this._callback.deleteClick = callback;
     this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteClickHandler);
+  }
+
+  setCancelClickHandler(callback) {
+    this._callback.cancelClick = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formCancelClickHandler);
   }
 }

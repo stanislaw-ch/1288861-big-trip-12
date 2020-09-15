@@ -1,35 +1,44 @@
 import Abstract from "./abstract.js";
-import {points} from "../main.js";
+import moment from "moment";
 
-export const createSiteTripInfoTemplate = () => {
+export const createSiteTripInfoTemplate = (points) => {
   const cities = points
           .sort((elem1, elem2) => elem1.startTime > elem2.startTime ? 1 : -1)
-          .map((it) => it.destination.name);
+    .map((it) => it.destination.name);
 
   const citiesMiddle = (cities.length > 2) ? `...` : cities[1];
 
-  const startDay = new Date(
+  const startDate = new Date(
       Math.min(...points
-          .map((it) => it.startTime.getTime())
+          .map((it) => new Date(it.startTime))
       )
-  ).toDateString().slice(4, 10);
+  );
 
-  let endDay = new Date(
+  let endDate = new Date(
       Math.max(...points
-          .map((it) => it.endTime.getTime())
+          .map((it) => new Date(it.endTime))
       )
-  ).toDateString().slice(4, 10);
+  );
 
-  if (endDay.slice(0, 3) === startDay.slice(0, 3)) {
-    endDay = endDay.slice(-2);
-  }
+  const startMonth = moment(startDate).format(`MMM`);
+  const endMonth = moment(endDate).format(`MMM`);
+  const startDay = startDate.getDate() + `&nbsp;&mdash;&nbsp;`;
+  const endDay = endDate.getDate();
+
+  const checkMonth = () => {
+    if (startMonth === endMonth) {
+      return ``;
+    }
+
+    return endMonth + ` `;
+  };
 
   if (points.length !== 0) {
     return `<section class="trip-main__trip-info  trip-info">
     <div class="trip-info__main">
       <h1 class="trip-info__title">${cities[0]} &mdash; ${citiesMiddle} &mdash; ${cities[cities.length - 1]}</h1>
 
-      <p class="trip-info__dates">${startDay}&nbsp;&mdash;&nbsp;${endDay}</p>
+      <p class="trip-info__dates">${startMonth} ${startDay}${checkMonth()}${endDay}</p>
     </div>
   </section>`;
   } else {
@@ -37,9 +46,13 @@ export const createSiteTripInfoTemplate = () => {
   }
 };
 
-
 export default class TripInfo extends Abstract {
+  constructor(points) {
+    super();
+    this._points = points;
+  }
+
   getTemplate() {
-    return createSiteTripInfoTemplate();
+    return createSiteTripInfoTemplate(this._points);
   }
 }
