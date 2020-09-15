@@ -1,12 +1,6 @@
 import {nanoid} from "nanoid";
 import PointsModel from "../model/points.js";
 
-// const StoreTitle = {
-//   EVENTS: `Points`,
-//   OFFERS: `Offers`,
-//   DESTINATIONS: `Destinations`,
-// };
-
 const getSyncedTasks = (items) => {
   return items.filter(({success}) => success)
     .map(({payload}) => payload.point);
@@ -33,8 +27,8 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.getOffers()
         .then((offers) => {
-          const offersItems = createStoreStructure(offers);
-          const items = {offersItems};
+          const items = createStoreStructure(offers);
+          // const items = {offersItems};
           this._store.setOffersItems(items);
           return offers;
         });
@@ -48,8 +42,8 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.getDestinations()
         .then((destination) => {
-          const destinationsItems = createStoreStructure(destination);
-          const items = {destinationsItems};
+          const items = createStoreStructure(destination);
+          // const items = {destinationsItems};
           this._store.setDestinationsItems(items);
           return destination;
         });
@@ -64,8 +58,8 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.getPoints()
         .then((points) => {
-          const pointsItems = createStoreStructure(points.map(PointsModel.adaptToServer));
-          const items = {pointsItems};
+          const items = createStoreStructure(points.map(PointsModel.adaptToServer));
+          // const items = {pointsItems};
           this._store.setPointsItems(items);
           return points;
         });

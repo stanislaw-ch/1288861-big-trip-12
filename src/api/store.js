@@ -1,8 +1,22 @@
+// const STORAGE_KEY = `BIG_TRIP`;
 export default class Store {
   constructor(key, storage) {
     this._storage = storage;
     this._storeKey = key;
   }
+
+
+  // getData() {
+  //   try {
+  //     return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+  //   } catch (err) {
+  //     return {};
+  //   }
+  // }
+
+  // setData(data) {
+  //   this._storeKey.setItem(STORAGE_KEY, JSON.stringify(data));
+  // }
 
   getPointsItems() {
     try {
