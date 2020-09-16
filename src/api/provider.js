@@ -1,7 +1,7 @@
 import {nanoid} from "nanoid";
 import PointsModel from "../model/points.js";
 
-const getSyncedTasks = (items) => {
+const getSyncedPoints = (items) => {
   return items.filter(({success}) => success)
     .map(({payload}) => payload.point);
 };
@@ -27,13 +27,11 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.getOffers()
         .then((offers) => {
-          const items = createStoreStructure(offers);
-          // const items = {offersItems};
-          this._store.setOffersItems(items);
+          this._store.setOffers(offers);
           return offers;
         });
     }
-    const storeOffers = Object.values(this._store.getOffersItems());
+    const storeOffers = Object.values(this._store.getOffers());
 
     return Promise.resolve(storeOffers.slice());
   }
@@ -42,14 +40,12 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.getDestinations()
         .then((destination) => {
-          const items = createStoreStructure(destination);
-          // const items = {destinationsItems};
-          this._store.setDestinationsItems(items);
+          this._store.setDestinations(destination);
           return destination;
         });
     }
 
-    const storeDestination = Object.values(this._store.getDestinationsItems());
+    const storeDestination = Object.values(this._store.getDestinations());
 
     return Promise.resolve(storeDestination.slice());
   }
@@ -59,13 +55,13 @@ export default class Provider {
       return this._api.getPoints()
         .then((points) => {
           const items = createStoreStructure(points.map(PointsModel.adaptToServer));
-          // const items = {pointsItems};
-          this._store.setPointsItems(items);
+          this._store.setPoints(items);
+
           return points;
         });
     }
 
-    const storePoints = Object.values(this._store.getPointsItems());
+    const storePoints = Object.values(this._store.getPoints());
 
     return Promise.resolve(storePoints.map(PointsModel.adaptToClient));
   }
@@ -114,12 +110,12 @@ export default class Provider {
 
   sync() {
     if (Provider.isOnline()) {
-      const storePoints = Object.values(this._store.getItems());
+      const storePoints = Object.values(this._store.getData());
 
       return this._api.sync(storePoints)
         .then((response) => {
-          const createdPoints = getSyncedTasks(response.created);
-          const updatedPoints = getSyncedTasks(response.updated);
+          const createdPoints = getSyncedPoints(response.created);
+          const updatedPoints = getSyncedPoints(response.updated);
           const items = createStoreStructure([...createdPoints, ...updatedPoints]);
 
           this._store.setItems(items);

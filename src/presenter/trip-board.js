@@ -273,7 +273,6 @@ export default class TripPresenter {
       this._newTripBtnComponent.getElement().disabled = true;
       return;
     } else if (this._getPoints().length !== 0) {
-      // this._renderTripInfo();
       this._renderPoints();
     } else {
       this._renderNoPoints();

@@ -3,11 +3,15 @@ import Abstract from "./abstract.js";
 export const createSiteTripCostTemplate = (tripPoint) => {
 
   if (tripPoint.length !== 0) {
-    const totalPrice = tripPoint
-      .map((it) => it.price)
-      .reduce(function (total, price) {
-        return total + price;
+    let totalPrice = 0;
+
+    tripPoint.forEach((item) => {
+      item.offers.forEach((offer) => {
+        totalPrice += +offer.price;
       });
+
+      totalPrice += item.price;
+    });
 
     return `<p class="trip-info__cost">
       Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalPrice}</span>
