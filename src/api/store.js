@@ -49,30 +49,29 @@ export default class Store {
     return this.getData().points;
   }
 
-  setItem(key, value) {
+  setItem(value) {
     const store = this.getData();
     store.points.push(value);
-    // store.points[key] = value;
 
     this.setData(store);
+  }
 
+  upDateItem(key, value) {
+    const store = this.getPoints();
 
-    // const store = this.getItems();
+    const points = [
+      ...store.slice(0, key),
+      value,
+      ...store.slice(key + 1)
+    ];
 
-    // this._storage.setItem(
-    //     this._storeKey,
-    //     JSON.stringify(
-    //         Object.assign({}, store, {
-    //           [key]: value
-    //         })
-    //     )
-    // );
+    this.setPoints(points);
   }
 
   removeItem(key) {
     const store = this.getData();
-    delete store.points[key];
+    const removePoints = store.points.filter((point) => point.id !== key);
 
-    this.setData(store);
+    this.setPoints(removePoints);
   }
 }

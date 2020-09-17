@@ -70,12 +70,12 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.updatePoint(point)
         .then((updatePoint) => {
-          this._store.setItem(updatePoint.id, PointsModel.adaptToServer(updatePoint));
+          this._store.upDateItem(updatePoint.id, PointsModel.adaptToServer(updatePoint));
           return updatePoint;
         });
     }
 
-    this._store.setItem(point.id, PointsModel.adaptToServer(Object.assign({}, point)));
+    this._store.upDateItem(point.id, PointsModel.adaptToServer(Object.assign({}, point)));
 
     return Promise.resolve(point);
   }
@@ -84,7 +84,7 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.addPoint(point)
         .then((newPoint) => {
-          this._store.setItem(newPoint.id, PointsModel.adaptToServer(newPoint));
+          this._store.setItem(PointsModel.adaptToServer(newPoint));
           return newPoint;
         });
     }
@@ -92,7 +92,7 @@ export default class Provider {
     const localNewPointId = nanoid();
     const localNewPoint = Object.assign({}, point, {id: localNewPointId});
 
-    this._store.setItem(localNewPoint.id, PointsModel.adaptToServer(localNewPoint));
+    this._store.setItem(PointsModel.adaptToServer(localNewPoint));
 
     return Promise.resolve(localNewPoint);
   }
@@ -114,7 +114,7 @@ export default class Provider {
 
       return this._api.sync(storePoints)
         .then((response) => {
-          const createdPoints = getSyncedPoints(response.created);
+          const createdPoints = response.created;
           const updatedPoints = getSyncedPoints(response.updated);
           const items = createStoreStructure([...createdPoints, ...updatedPoints]);
 
