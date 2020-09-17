@@ -39,15 +39,15 @@ export default class Provider {
   getDestinations() {
     if (Provider.isOnline()) {
       return this._api.getDestinations()
-        .then((destination) => {
-          this._store.setDestinations(destination);
-          return destination;
+        .then((destinations) => {
+          this._store.setDestinations(destinations);
+          return destinations;
         });
     }
 
-    const storeDestination = Object.values(this._store.getDestinations());
+    const storeDestinations = Object.values(this._store.getDestinations());
 
-    return Promise.resolve(storeDestination.slice());
+    return Promise.resolve(storeDestinations.slice());
   }
 
   getPoints() {
@@ -110,7 +110,7 @@ export default class Provider {
 
   sync() {
     if (Provider.isOnline()) {
-      const storePoints = Object.values(this._store.getData());
+      const storePoints = this._store.getPoints();
 
       return this._api.sync(storePoints)
         .then((response) => {
@@ -118,7 +118,7 @@ export default class Provider {
           const updatedPoints = getSyncedPoints(response.updated);
           const items = createStoreStructure([...createdPoints, ...updatedPoints]);
 
-          this._store.setItems(items);
+          this._store.setPoints(items);
         });
     }
 

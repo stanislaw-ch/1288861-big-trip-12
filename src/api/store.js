@@ -23,9 +23,9 @@ export default class Store {
     this.setData(data);
   }
 
-  setDestinations(destination) {
+  setDestinations(destinations) {
     const data = this.getData();
-    data.destination = destination;
+    data.destinations = destinations;
 
     this.setData(data);
   }
@@ -42,7 +42,7 @@ export default class Store {
   }
 
   getDestinations() {
-    return this.getData().destination;
+    return this.getData().destinations;
   }
 
   getPoints() {
@@ -51,9 +51,22 @@ export default class Store {
 
   setItem(key, value) {
     const store = this.getData();
-    store.points[key] = value;
+    store.points.push(value);
+    // store.points[key] = value;
 
     this.setData(store);
+
+
+    // const store = this.getItems();
+
+    // this._storage.setItem(
+    //     this._storeKey,
+    //     JSON.stringify(
+    //         Object.assign({}, store, {
+    //           [key]: value
+    //         })
+    //     )
+    // );
   }
 
   removeItem(key) {
