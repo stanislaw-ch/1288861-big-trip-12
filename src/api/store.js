@@ -56,13 +56,16 @@ export default class Store {
     this.setData(store);
   }
 
-  upDateItem(key, value) {
-    const store = this.getPoints();
+  updateItem(key, value) {
+    const storedPoints = this.getPoints();
+
+    const index = storedPoints.findIndex((point) => point.id === key);
+    storedPoints[index] = value;
 
     const points = [
-      ...store.slice(0, key),
+      ...storedPoints.slice(0, key),
       value,
-      ...store.slice(key + 1)
+      ...storedPoints.slice(key + 1)
     ];
 
     this.setPoints(points);

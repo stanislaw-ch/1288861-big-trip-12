@@ -70,12 +70,12 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.updatePoint(point)
         .then((updatePoint) => {
-          this._store.upDateItem(updatePoint.id, PointsModel.adaptToServer(updatePoint));
+          this._store.updateItem(updatePoint.id, PointsModel.adaptToServer(updatePoint));
           return updatePoint;
         });
     }
 
-    this._store.upDateItem(point.id, PointsModel.adaptToServer(Object.assign({}, point)));
+    this._store.updateItem(point.id, PointsModel.adaptToServer(Object.assign({}, point)));
 
     return Promise.resolve(point);
   }
