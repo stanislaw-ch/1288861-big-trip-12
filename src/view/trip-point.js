@@ -8,7 +8,10 @@ export const createSiteTripPointTemplate = (data) => {
 
   const typePoint = capitalizeFirstLetter(eventsTypes);
 
-  const offerList = offers.slice(0, 3);
+  const MAX_DISPLAY_OFFERS = 3;
+
+  const offerList = offers.slice(0, MAX_DISPLAY_OFFERS);
+
 
   let offersTemplate = ``;
   for (let offer of offerList) {

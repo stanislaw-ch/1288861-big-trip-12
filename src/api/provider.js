@@ -1,7 +1,7 @@
 import {nanoid} from "nanoid";
 import PointsModel from "../model/points.js";
 
-const getSyncedTasks = (items) => {
+const getSyncedPoints = (items) => {
   return items.filter(({success}) => success)
     .map(({payload}) => payload.point);
 };
@@ -27,13 +27,11 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.getOffers()
         .then((offers) => {
-          const items = createStoreStructure(offers);
-          // const items = {offersItems};
-          this._store.setOffersItems(items);
+          this._store.setOffers(offers);
           return offers;
         });
     }
-    const storeOffers = Object.values(this._store.getOffersItems());
+    const storeOffers = Object.values(this._store.getOffers());
 
     return Promise.resolve(storeOffers.slice());
   }
@@ -41,17 +39,15 @@ export default class Provider {
   getDestinations() {
     if (Provider.isOnline()) {
       return this._api.getDestinations()
-        .then((destination) => {
-          const items = createStoreStructure(destination);
-          // const items = {destinationsItems};
-          this._store.setDestinationsItems(items);
-          return destination;
+        .then((destinations) => {
+          this._store.setDestinations(destinations);
+          return destinations;
         });
     }
 
-    const storeDestination = Object.values(this._store.getDestinationsItems());
+    const storeDestinations = Object.values(this._store.getDestinations());
 
-    return Promise.resolve(storeDestination.slice());
+    return Promise.resolve(storeDestinations.slice());
   }
 
   getPoints() {
@@ -59,13 +55,13 @@ export default class Provider {
       return this._api.getPoints()
         .then((points) => {
           const items = createStoreStructure(points.map(PointsModel.adaptToServer));
-          // const items = {pointsItems};
-          this._store.setPointsItems(items);
+          this._store.setPoints(items);
+
           return points;
         });
     }
 
-    const storePoints = Object.values(this._store.getPointsItems());
+    const storePoints = Object.values(this._store.getPoints());
 
     return Promise.resolve(storePoints.map(PointsModel.adaptToClient));
   }
@@ -74,12 +70,12 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.updatePoint(point)
         .then((updatePoint) => {
-          this._store.setItem(updatePoint.id, PointsModel.adaptToServer(updatePoint));
+          this._store.updateItem(updatePoint.id, PointsModel.adaptToServer(updatePoint));
           return updatePoint;
         });
     }
 
-    this._store.setItem(point.id, PointsModel.adaptToServer(Object.assign({}, point)));
+    this._store.updateItem(point.id, PointsModel.adaptToServer(Object.assign({}, point)));
 
     return Promise.resolve(point);
   }
@@ -88,7 +84,7 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.addPoint(point)
         .then((newPoint) => {
-          this._store.setItem(newPoint.id, PointsModel.adaptToServer(newPoint));
+          this._store.setItem(PointsModel.adaptToServer(newPoint));
           return newPoint;
         });
     }
@@ -96,7 +92,7 @@ export default class Provider {
     const localNewPointId = nanoid();
     const localNewPoint = Object.assign({}, point, {id: localNewPointId});
 
-    this._store.setItem(localNewPoint.id, PointsModel.adaptToServer(localNewPoint));
+    this._store.setItem(PointsModel.adaptToServer(localNewPoint));
 
     return Promise.resolve(localNewPoint);
   }
@@ -114,15 +110,15 @@ export default class Provider {
 
   sync() {
     if (Provider.isOnline()) {
-      const storePoints = Object.values(this._store.getItems());
+      const storePoints = this._store.getPoints();
 
       return this._api.sync(storePoints)
         .then((response) => {
-          const createdPoints = getSyncedTasks(response.created);
-          const updatedPoints = getSyncedTasks(response.updated);
+          const createdPoints = response.created;
+          const updatedPoints = getSyncedPoints(response.updated);
           const items = createStoreStructure([...createdPoints, ...updatedPoints]);
 
-          this._store.setItems(items);
+          this._store.setPoints(items);
         });
     }
 
