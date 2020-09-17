@@ -62,13 +62,7 @@ export default class Store {
     const index = storedPoints.findIndex((point) => point.id === key);
     storedPoints[index] = value;
 
-    const points = [
-      ...storedPoints.slice(0, key),
-      value,
-      ...storedPoints.slice(key + 1)
-    ];
-
-    this.setPoints(points);
+    this.setPoints(storedPoints);
   }
 
   removeItem(key) {
