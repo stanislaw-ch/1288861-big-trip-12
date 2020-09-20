@@ -3,18 +3,17 @@ import {capitalizeFirstLetter} from '../utils/points.js';
 import {getFormattedTime, getDurationInterval} from '../utils/points.js';
 
 export const createSiteTripPointTemplate = (data) => {
+  const MAX_DISPLAY_OFFERS = 3;
+
   const {eventsTypes, price, offers, startTime, endTime} = data;
   const {name} = data.destination;
 
   const typePoint = capitalizeFirstLetter(eventsTypes);
 
-  const MAX_DISPLAY_OFFERS = 3;
-
-  const offerList = offers.slice(0, MAX_DISPLAY_OFFERS);
-
+  const displayedOffers = offers.slice(0, MAX_DISPLAY_OFFERS);
 
   let offersTemplate = ``;
-  for (let offer of offerList) {
+  for (let offer of displayedOffers) {
     offersTemplate += `
       <li class="event__offer">
       <span class="event__offer-title">${offer.title}</span>

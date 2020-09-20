@@ -26,7 +26,7 @@ export default class PointNewPresenter {
 
     this._pointAddComponent = new PointAdd(this._destroyCallback, offers, destination);
     this._pointAddComponent.setFormSubmitHandler(this._handleFormSubmit);
-    this._pointAddComponent.setCancelClickHandler(this._handleCancelClick);
+    this._pointAddComponent.setDeleteClickHandler(this._handleCancelClick);
 
     render(this._pointListContainer, this._dayComponent, RenderPosition.AFTERBEGIN);
     const dayPoint = this._dayComponent.getElement().querySelector(`.trip-events__list`);

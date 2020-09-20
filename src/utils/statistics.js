@@ -2,13 +2,13 @@ import moment from "moment";
 
 export const uniqTypes = (items) => [...new Set(items)];
 
-export const costPointByType = (points, type) => {
+export const getcostPointByType = (points, type) => {
   return points.filter((item) => item.eventsTypes === type)
                .map((it) => it.price)
                .reduce((total, price) => total + price);
 };
 
-export const countPointByType = (points, type) => {
+export const getCountPointByType = (points, type) => {
   return points.filter((item) => item.eventsTypes === type).length;
 };
 

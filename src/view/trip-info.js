@@ -4,7 +4,7 @@ import moment from "moment";
 export const createSiteTripInfoTemplate = (points) => {
   const cities = points
           .sort((elem1, elem2) => moment(elem1.startTime).format(`YYYY-MM-DD`) > moment(elem2.startTime).format(`YYYY-MM-DD`) ? 1 : -1)
-    .map((it) => it.destination.name);
+          .map((it) => it.destination.name);
 
   const citiesMiddle = (cities.length > 2) ? `...` : cities[1];
 

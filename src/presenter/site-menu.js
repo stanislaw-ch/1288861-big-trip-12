@@ -1,5 +1,4 @@
 import SiteMenuView from "../view/site-menu.js";
-import FilterView from "../view/trip-filter.js";
 import TripNewButton from "../view/new-trip-btn.js";
 import {render, RenderPosition} from "../utils/render.js";
 import {MenuItem} from "../const.js";
@@ -12,7 +11,6 @@ export default class SiteMenuPresenter {
     this._siteMenuModel = siteMenuModel;
 
     this._siteMenuComponent = new SiteMenuView();
-    this._filterComponent = new FilterView();
     this._newTripBtnComponent = new TripNewButton();
 
     this._handleSiteMenuChange = this._handleSiteMenuChange.bind(this);

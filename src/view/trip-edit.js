@@ -8,7 +8,8 @@ import {
 import flatpickr from "flatpickr";
 import {
   TRIP_TYPES,
-  ACTIVITY_TYPES
+  ACTIVITY_TYPES,
+  PrepositionForEvents
 } from "../const.js";
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
@@ -71,7 +72,7 @@ const createRadioTemplate = (point, types) => {
 };
 
 const getOfferLabel = (offer) => {
-  let split = offer.title.split(` `);
+  const split = offer.title.split(` `);
 
   if (split.length >= 2 && split[split.length - 1] === `class`) {
     return split[split.length - 2];
@@ -144,7 +145,7 @@ const createPhotosTemplate = (photos) => {
   );
 };
 
-const createDesinationTemplate = (description, photos) => {
+const createDestinationTemplate = (description, photos) => {
   return (
     `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
@@ -203,10 +204,11 @@ export const createSiteTripPointEditTemplate = (
   } = pointsData;
 
   const {name} = pointsData.destination;
+  const {TO, IN} = PrepositionForEvents;
   const typePoint = capitalizeFirstLetter(eventsTypes);
   const cities = [];
   let photos = [];
-  let description = [];
+  let descriptions = [];
   const isSubmitDisabled = (name === ``);
 
   destination.forEach((item) => {
@@ -214,9 +216,18 @@ export const createSiteTripPointEditTemplate = (
 
     if (item.name === name) {
       photos = item.pictures;
-      description = item.description;
+      descriptions = item.description;
     }
   });
+
+  const transformPrepositionForEvents = (typeType) => {
+    if (ACTIVITY_TYPES.includes(typeType)) {
+      return IN;
+    }
+
+    return TO;
+  };
+
 
   const stateDeleteButton = isDeleting ? `Deleting...` : `Delete`;
 
@@ -258,7 +269,7 @@ export const createSiteTripPointEditTemplate = (
     <div class="event__field-group  event__field-group--destination">
       <label
         class="event__label  event__type-output"
-        for="event-destination-${id}">${typePoint} to
+        for="event-destination-${id}">${typePoint} ${transformPrepositionForEvents(eventsTypes)}
       </label>
       <input
         class="event__input  event__input--destination"
@@ -338,7 +349,7 @@ export const createSiteTripPointEditTemplate = (
       <div class="event__available-offers">${addOfferTemplate(pointsData, offersData)}</div>
     </section>
 
-    ${name !== `` ? createDesinationTemplate(description, photos) : ``}
+    ${name !== `` ? createDestinationTemplate(descriptions, photos) : ``}
   </section>
 </form>`;
 };
@@ -359,7 +370,6 @@ export default class TripPointEdit extends SmartView {
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
-    this._formCancelClickHandler = this._formCancelClickHandler.bind(this);
 
     this._editClickHandler = this._editClickHandler.bind(this);
     this._favoriteToggleHandler = this._favoriteToggleHandler.bind(this);
@@ -428,7 +438,6 @@ export default class TripPointEdit extends SmartView {
     this.setEditClickHandler(this._callback.editClick);
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setDeleteClickHandler(this._callback.deleteClick);
-    this.setCancelClickHandler(this._callback.cancelClick);
   }
 
   _setDatepicker() {
@@ -549,11 +558,6 @@ export default class TripPointEdit extends SmartView {
     this._callback.formSubmit(TripPointEdit.parseDataToPoint(this._data));
   }
 
-  _formCancelClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.cancelClick(TripPointEdit.parseDataToPoint(this._data));
-  }
-
   _formDeleteClickHandler(evt) {
     evt.preventDefault();
     this._callback.deleteClick(TripPointEdit.parseDataToPoint(this._data));
@@ -626,16 +630,11 @@ export default class TripPointEdit extends SmartView {
 
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
-    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
+    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteToggleHandler);
   }
 
   setDeleteClickHandler(callback) {
     this._callback.deleteClick = callback;
     this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteClickHandler);
-  }
-
-  setCancelClickHandler(callback) {
-    this._callback.cancelClick = callback;
-    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formCancelClickHandler);
   }
 }

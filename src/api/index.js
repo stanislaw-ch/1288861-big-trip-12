@@ -20,8 +20,7 @@ export default class Api {
 
   getOffers() {
     return this._load({url: `offers`})
-      .then(Api.toJSON)
-      .then((offers) => offers.slice());
+      .then(Api.toJSON);
   }
 
   getPoints() {
@@ -32,8 +31,7 @@ export default class Api {
 
   getDestinations() {
     return this._load({url: `destinations`})
-      .then(Api.toJSON)
-      .then((destination) => destination.slice());
+      .then(Api.toJSON);
   }
 
   updatePoint(point) {

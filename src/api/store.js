@@ -65,7 +65,7 @@ export default class Store {
     this.setPoints(storedPoints);
   }
 
-  removeItem(key) {
+  leftPoints(key) {
     const store = this.getData();
     const removePoints = store.points.filter((point) => point.id !== key);
 

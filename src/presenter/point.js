@@ -2,7 +2,7 @@ import TripPoint from "../view/trip-point.js";
 import TripPointEdit from "../view/trip-edit.js";
 import {render, RenderPosition, replace, remove} from "../utils/render.js";
 import {UserAction, UpdateType} from "../const.js";
-import {isDatesEqual} from "../utils/points.js";
+import {areDatesEqual} from "../utils/points.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -152,8 +152,8 @@ export default class PointPresenter {
 
   _handleFormSubmit(update) {
     const isMajorUpdate =
-      !isDatesEqual(this._pointElement.startTime, update.startTime) ||
-      !isDatesEqual(this._pointElement.endTime, update.endTime);
+      !areDatesEqual(this._pointElement.startTime, update.startTime) ||
+      !areDatesEqual(this._pointElement.endTime, update.endTime);
 
     this._changeData(
         UserAction.UPDATE_POINT,

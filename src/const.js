@@ -43,3 +43,8 @@ export const ACTIVITY_TYPES = [
   `sightseeing`,
   `restaurant`
 ];
+
+export const PrepositionForEvents = {
+  TO: `to`,
+  IN: `in`
+};

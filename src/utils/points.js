@@ -1,25 +1,9 @@
 import moment from "moment";
 
-// Форматирует номер дня если он меньше нуля, добавляя в начало "0"
-export const getFormattedDayNumber = (num) => (num < 10) ? `0${num}` : num;
-
-/**
- * Возвращает время в формате час мин для начала и окончания события в точке
- * @param {object} date
- *
- * @return {object}
- */
 export const getFormattedTime = (date) => {
   return moment(date).format(`HH:mm`);
 };
 
-/**
- * Описывает логику отображения интервала продолжительности события в точке
- * @param {object} startTime
- * @param {object} endTime
- *
- * @return {object}
- */
 export const getDurationInterval = (startTime, endTime) => {
   const start = moment(new Date(startTime).getTime());
   const end = moment(new Date(endTime).getTime());
@@ -39,30 +23,12 @@ export const getDurationInterval = (startTime, endTime) => {
   return `${moment(duration).format(`DD`)}D ${moment(duration).format(`HH`)}H ${moment(duration).format(`mm`)}M`;
 };
 
-/**
- * Возвращает дату в формате день, месяц, год
- * @param {object} date
- *
- * @return {object}
- */
-export const getDayFormat = (date) => {
-  return moment(date).format(`MMM DD YY`);
-};
-
-/**
- * Возвращает дату в формате день, месяц, год
- * @param {object} date
- *
- * @return {object}
- */
 export const getTimeFormat = (date) => {
   return `${moment(date).format(`DD/MM/YY HH:mm`)}`;
 };
 
 export const getDurationIntervalForSort = (startTime, endTime) => {
-  const durationInMin = (new Date(endTime).getTime() - new Date(startTime).getTime()) / 60000;
-
-  return durationInMin;
+  return (new Date(endTime).getTime() - new Date(startTime).getTime()) / 60000;
 };
 
 export const sortTimeDown = (pointA, pointB) =>
@@ -71,7 +37,7 @@ export const sortTimeDown = (pointA, pointB) =>
 
 export const sortPriceDown = (pointA, pointB) => pointA.price > pointB.price ? -1 : 1;
 
-export const isDatesEqual = (dateA, dateB) => {
+export const areDatesEqual = (dateA, dateB) => {
   if (dateA === null && dateB === null) {
     return true;
   }
@@ -84,10 +50,10 @@ export const isPointExpired = (date) => {
     return false;
   }
 
-  const currentDate = new Date();
-  const pointDate = new Date(date);
+  const currentDate = moment(new Date()).format(`YYYY-MM-DD`);
+  const pointDate = moment(new Date(date)).format(`YYYY-MM-DD`);
 
-  return currentDate.getTime() > pointDate.getTime();
+  return currentDate > pointDate;
 };
 
 export const isPointActual = (date) => {
@@ -95,17 +61,11 @@ export const isPointActual = (date) => {
     return false;
   }
 
-  const currentDate = new Date();
-  const pointDate = new Date(date);
+  const currentDate = moment(new Date()).format(`YYYY-MM-DD`);
+  const pointDate = moment(new Date(date)).format(`YYYY-MM-DD`);
 
-  return currentDate.getTime() < pointDate.getTime();
+  return currentDate <= pointDate;
 };
-
-// Date.now() и Math.random() - плохие решения для генерации id
-// в "продуктовом" коде, а для моков самое то.
-// Для "продуктового" кода используйте что-то понадежнее,
-// вроде nanoid - https://github.com/ai/nanoid
-export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
 export const capitalizeFirstLetter = (str) => {
   if (!str) {

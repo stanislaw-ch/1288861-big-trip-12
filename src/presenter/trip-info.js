@@ -23,9 +23,9 @@ export default class TripInfoPresenter {
   }
 
   _renderTripPrice(points) {
-    this._tripPriceComponent = new TripPrice(points);
+    const tripPriceComponent = new TripPrice(points);
 
-    render(this._tripInfoComponent, this._tripPriceComponent, BEFOREEND);
+    render(this._tripInfoComponent, tripPriceComponent, BEFOREEND);
   }
 
   destroy() {

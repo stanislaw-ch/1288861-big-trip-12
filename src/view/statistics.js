@@ -1,14 +1,14 @@
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import Smart from "./smart.js";
-import {uniqTypes, costPointByType, countPointByType, getDurationInterval} from "../utils/statistics.js";
+import {uniqTypes, getcostPointByType, getCountPointByType, getDurationInterval} from "../utils/statistics.js";
 
 const BAR_HEIGHT = 55;
 
 const renderMoneyChart = (moneyCtx, points) => {
   const eventsTypes = points.map((item) => item.eventsTypes);
   const types = uniqTypes(eventsTypes);
-  const pointByTypeCost = types.map((item) => costPointByType(points, item));
+  const pointsByTypeCost = types.map((item) => getcostPointByType(points, item));
 
   moneyCtx.height = BAR_HEIGHT * types.length;
 
@@ -18,7 +18,7 @@ const renderMoneyChart = (moneyCtx, points) => {
     data: {
       labels: types,
       datasets: [{
-        data: pointByTypeCost,
+        data: pointsByTypeCost,
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`
@@ -81,7 +81,7 @@ const renderMoneyChart = (moneyCtx, points) => {
 const renderTransportChart = (transportCtx, points) => {
   const eventsTypes = points.map((item) => item.eventsTypes);
   const types = uniqTypes(eventsTypes);
-  const pointByTypeTransport = types.map((item) => countPointByType(points, item));
+  const pointsByTypeTransport = types.map((item) => getCountPointByType(points, item));
 
   transportCtx.height = BAR_HEIGHT * types.length;
 
@@ -91,7 +91,7 @@ const renderTransportChart = (transportCtx, points) => {
     data: {
       labels: types,
       datasets: [{
-        data: pointByTypeTransport,
+        data: pointsByTypeTransport,
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`
@@ -155,7 +155,7 @@ const renderTransportChart = (transportCtx, points) => {
 const renderTimeChart = (transportCtx, points) => {
   const eventsTypes = points.map((item) => item.eventsTypes);
   const types = uniqTypes(eventsTypes);
-  const pointByTypeTime = types.map((item) => getDurationInterval(points, item));
+  const pointsByTypeTime = types.map((item) => getDurationInterval(points, item));
 
   transportCtx.height = BAR_HEIGHT * types.length;
 
@@ -165,7 +165,7 @@ const renderTimeChart = (transportCtx, points) => {
     data: {
       labels: types,
       datasets: [{
-        data: pointByTypeTime,
+        data: pointsByTypeTime,
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`

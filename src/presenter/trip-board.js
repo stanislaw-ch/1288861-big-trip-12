@@ -115,9 +115,9 @@ export default class TripPresenter {
         this._api.updatePoint(update).then((response) => {
           this._pointsModel.updatePoint(updateType, response);
         })
-        .catch(() => {
-          this._pointItems[update.id].setViewState(PointPresenterViewState.ABORTING);
-        });
+          .catch(() => {
+            this._pointItems[update.id].setViewState(PointPresenterViewState.ABORTING);
+          });
         break;
       case UserAction.ADD_POINT:
         this._pointNewPresenter.setSaving();
@@ -175,9 +175,9 @@ export default class TripPresenter {
       case MenuItem.STATISTICS:
         this.destroy();
         const siteMainElement = document.querySelector(`.page-body__page-main`);
-        const siteStats = siteMainElement.querySelector(`.page-body__container`);
+        const siteStatsElement = siteMainElement.querySelector(`.page-body__container`);
         this._statisticsComponent = new Statistics(this._pointsModel.getPoints());
-        render(siteStats, this._statisticsComponent, RenderPosition.BEFOREEND);
+        render(siteStatsElement, this._statisticsComponent, RenderPosition.BEFOREEND);
         break;
       case MenuItem.ADD_NEW_EVENT:
         this._siteMenuModel.setMenuItem(MenuItem.TABLE);
@@ -243,11 +243,11 @@ export default class TripPresenter {
       const dayComponent = new TripDay(date);
 
       render(this._boardComponent, dayComponent, RenderPosition.BEFOREEND);
-      const dayPoint = dayComponent.getElement().querySelector(`.trip-events__list`);
+      const dayPointElement = dayComponent.getElement().querySelector(`.trip-events__list`);
 
       const dayEvents = this._getPoints().filter((pointItem) => moment(pointItem.startTime).format(`YYYY-MM-DD`) === date);
 
-      dayEvents.forEach((pointItem) => this._renderPoint(dayPoint, pointItem));
+      dayEvents.forEach((pointItem) => this._renderPoint(dayPointElement, pointItem));
     }
   }
 
@@ -271,7 +271,6 @@ export default class TripPresenter {
     if (this._isLoading) {
       this._renderLoading();
       this._newTripBtnComponent.getElement().disabled = true;
-      return;
     } else if (this._getPoints().length !== 0) {
       this._renderPoints();
     } else {

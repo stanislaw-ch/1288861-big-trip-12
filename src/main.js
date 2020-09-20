@@ -11,7 +11,7 @@ import Api from "./api/index.js";
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
 
-const AUTHORIZATION = `Basic oovigizsskoktdd`;
+const AUTHORIZATION = `Basic oovigizsskoktddjjhg`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 const STORE_PREFIX = `bigtrip-localstorage`;
 const STORE_VER = `v12`;
@@ -21,7 +21,7 @@ const siteHeaderElement = document.querySelector(`.page-header`);
 const siteMainElement = document.querySelector(`.page-body__page-main`);
 const siteBoard = siteMainElement.querySelector(`.trip-events`);
 const siteControlsElement = siteHeaderElement.querySelector(`.trip-controls`);
-const siteFilter = siteHeaderElement.querySelector(`.trip-main__trip-controls`);
+const siteFilterElement = siteHeaderElement.querySelector(`.trip-main__trip-controls`);
 
 const api = new Api(END_POINT, AUTHORIZATION);
 const store = new Store(STORE_NAME, window.localStorage);
@@ -38,7 +38,7 @@ const siteMenuPresenter = new SiteMenuPresenter(
     siteMenuModel
 );
 const filterPresenter = new FilterPresenter(
-    siteFilter,
+    siteFilterElement,
     filterModel,
     pointsModel
 );
@@ -56,29 +56,28 @@ filterPresenter.init();
 tripPresenter.init();
 
 apiWithProvider.getOffers()
-  .then((offers) => {
-    offersModel.setOffers(offers);
-
-    apiWithProvider.getPoints()
-      .then((points) => {
-        pointsModel.setPoints(UpdateType.INIT, points);
-      })
-      .catch(() => {
-        pointsModel.setPoints(UpdateType.INIT, []);
-      });
-
-  })
+.then((offers) => {
+  offersModel.setOffers(offers);
+})
 .catch(() => {
   offersModel.setOffers([]);
 });
+
+apiWithProvider.getPoints()
+  .then((points) => {
+    pointsModel.setPoints(UpdateType.INIT, points);
+  })
+  .catch(() => {
+    pointsModel.setPoints(UpdateType.INIT, []);
+  });
 
 apiWithProvider.getDestinations()
   .then((destination) => {
     destinationsModel.setDestinations(destination);
   })
-.catch(() => {
-  destinationsModel.setDestinations([]);
-});
+  .catch(() => {
+    destinationsModel.setDestinations([]);
+  });
 
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`)

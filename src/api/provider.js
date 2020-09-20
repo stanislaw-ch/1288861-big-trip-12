@@ -6,16 +6,13 @@ const getSyncedPoints = (items) => {
     .map(({payload}) => payload.point);
 };
 
-const createStoreStructure = (items, isPoints) => {
-  return items.reduce((acc, current) => {
-    if (isPoints) {
-      return Object.assign({}, acc, {
-        [current.id]: current,
-      });
-    }
-    return items;
-  }, {});
-};
+// const createStoreStructure = (items) => {
+//   return items.reduce((acc, current) => {
+//     return Object.assign({}, acc, {
+//       [current.id]: current,
+//     });
+//   }, {});
+// };
 
 export default class Provider {
   constructor(api, store) {
@@ -33,7 +30,7 @@ export default class Provider {
     }
     const storeOffers = Object.values(this._store.getOffers());
 
-    return Promise.resolve(storeOffers.slice());
+    return Promise.resolve(storeOffers);
   }
 
   getDestinations() {
@@ -47,14 +44,14 @@ export default class Provider {
 
     const storeDestinations = Object.values(this._store.getDestinations());
 
-    return Promise.resolve(storeDestinations.slice());
+    return Promise.resolve(storeDestinations);
   }
 
   getPoints() {
     if (Provider.isOnline()) {
       return this._api.getPoints()
         .then((points) => {
-          const items = createStoreStructure(points.map(PointsModel.adaptToServer));
+          const items = points.map(PointsModel.adaptToServer);
           this._store.setPoints(items);
 
           return points;
@@ -69,9 +66,9 @@ export default class Provider {
   updatePoint(point) {
     if (Provider.isOnline()) {
       return this._api.updatePoint(point)
-        .then((updatePoint) => {
-          this._store.updateItem(updatePoint.id, PointsModel.adaptToServer(updatePoint));
-          return updatePoint;
+        .then((updatedPoint) => {
+          this._store.updateItem(updatedPoint.id, PointsModel.adaptToServer(updatedPoint));
+          return updatedPoint;
         });
     }
 
@@ -100,10 +97,10 @@ export default class Provider {
   deletePoint(point) {
     if (Provider.isOnline()) {
       return this._api.deletePoint(point)
-        .then(() => this._store.removeItem(point.id));
+        .then(() => this._store.leftPoints(point.id));
     }
 
-    this._store.removeItem(point.id);
+    this._store.leftPoints(point.id);
 
     return Promise.resolve();
   }
@@ -116,7 +113,7 @@ export default class Provider {
         .then((response) => {
           const createdPoints = response.created;
           const updatedPoints = getSyncedPoints(response.updated);
-          const items = createStoreStructure([...createdPoints, ...updatedPoints]);
+          const items = [...createdPoints, ...updatedPoints];
 
           this._store.setPoints(items);
         });
