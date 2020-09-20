@@ -6,14 +6,6 @@ const getSyncedPoints = (items) => {
     .map(({payload}) => payload.point);
 };
 
-// const createStoreStructure = (items) => {
-//   return items.reduce((acc, current) => {
-//     return Object.assign({}, acc, {
-//       [current.id]: current,
-//     });
-//   }, {});
-// };
-
 export default class Provider {
   constructor(api, store) {
     this._api = api;
