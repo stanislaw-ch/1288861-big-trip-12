@@ -239,7 +239,7 @@ export default class TripPresenter {
       .map((pointItem) => moment(pointItem.startTime).format(`YYYY-MM-DD`))
       .sort((elem1, elem2) => elem1 > elem2 ? 1 : -1));
 
-    for (let date of sortDates) {
+    for (const date of sortDates) {
       const dayComponent = new TripDay(date);
 
       render(this._boardComponent, dayComponent, RenderPosition.BEFOREEND);

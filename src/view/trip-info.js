@@ -14,7 +14,7 @@ export const createSiteTripInfoTemplate = (points) => {
       )
   );
 
-  let endDate = new Date(
+  const endDate = new Date(
       Math.max(...points
           .map((it) => new Date(it.endTime))
       )

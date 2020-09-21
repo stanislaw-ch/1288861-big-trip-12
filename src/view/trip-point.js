@@ -13,7 +13,7 @@ export const createSiteTripPointTemplate = (data) => {
   const displayedOffers = offers.slice(0, MAX_DISPLAY_OFFERS);
 
   let offersTemplate = ``;
-  for (let offer of displayedOffers) {
+  for (const offer of displayedOffers) {
     offersTemplate += `
       <li class="event__offer">
       <span class="event__offer-title">${offer.title}</span>
