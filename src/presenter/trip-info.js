@@ -1,10 +1,10 @@
-import TripInfo from "../view/trip-info.js";
-import TripPrice from "../view/trip-cost.js";
+import TripInfoView from "../view/trip-info.js";
+import TripPriceView from "../view/trip-cost.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
 
 const {AFTERBEGIN, BEFOREEND} = RenderPosition;
 
-export default class TripInfoPresenter {
+export default class TripInfo {
   constructor(tripInfoContainer) {
     this._tripInfoContainer = tripInfoContainer;
 
@@ -17,13 +17,13 @@ export default class TripInfoPresenter {
   }
 
   _renderTripInfo(points) {
-    this._tripInfoComponent = new TripInfo(points);
+    this._tripInfoComponent = new TripInfoView(points);
 
     render(this._tripInfoContainer, this._tripInfoComponent, AFTERBEGIN);
   }
 
   _renderTripPrice(points) {
-    const tripPriceComponent = new TripPrice(points);
+    const tripPriceComponent = new TripPriceView(points);
 
     render(this._tripInfoComponent, tripPriceComponent, BEFOREEND);
   }

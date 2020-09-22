@@ -41,9 +41,10 @@ export const createSiteTripInfoTemplate = (points) => {
       <p class="trip-info__dates">${startMonth} ${startDay}${checkMonth()}${endDay}</p>
     </div>
   </section>`;
-  } else {
-    return `<section class="trip-main__trip-info  trip-info"></section>`;
   }
+
+  return `<section class="trip-main__trip-info  trip-info"></section>`;
+
 };
 
 export default class TripInfo extends Abstract {

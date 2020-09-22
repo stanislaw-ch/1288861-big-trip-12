@@ -16,11 +16,11 @@ export const createSiteTripCostTemplate = (tripPoint) => {
     return `<p class="trip-info__cost">
       Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalPrice}</span>
       </p>`;
-  } else {
-    return `<p class="trip-info__cost">
+  }
+
+  return `<p class="trip-info__cost">
     Total: &euro;&nbsp;<span class="trip-info__cost-value">0</span>
     </p>`;
-  }
 };
 
 export default class TripCost extends Abstract {

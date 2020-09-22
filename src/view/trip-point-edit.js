@@ -188,7 +188,7 @@ const createTripFavoriteButtonTemplate = (isNew, isFavorite, isDisabled, pointsD
 export const createSiteTripPointEditTemplate = (
     pointsData,
     offersData,
-    destination,
+    destinations,
     isNew) => {
 
   const {
@@ -211,7 +211,7 @@ export const createSiteTripPointEditTemplate = (
   let descriptions = [];
   const isSubmitDisabled = (name === ``);
 
-  destination.forEach((item) => {
+  destinations.forEach((item) => {
     cities.push(item.name);
 
     if (item.name === name) {
@@ -355,7 +355,7 @@ export const createSiteTripPointEditTemplate = (
 };
 
 export default class TripPointEdit extends SmartView {
-  constructor(data, offers, destination) {
+  constructor(data, offers, destinations) {
     super();
     if (!data) {
       data = BLANK_POINT;
@@ -366,7 +366,7 @@ export default class TripPointEdit extends SmartView {
     this._datepickerStart = null;
     this._datepickerEnd = null;
     this._offers = offers;
-    this._destination = destination;
+    this._destinations = destinations;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
@@ -429,7 +429,7 @@ export default class TripPointEdit extends SmartView {
   }
 
   getTemplate() {
-    return createSiteTripPointEditTemplate(this._data, this._offers, this._destination, this._isNew);
+    return createSiteTripPointEditTemplate(this._data, this._offers, this._destinations, this._isNew);
   }
 
   restoreHandlers() {
@@ -600,7 +600,7 @@ export default class TripPointEdit extends SmartView {
   _eventsDestinationClickHandler(evt) {
     evt.preventDefault();
 
-    const destination = this._destination.find((item) => item.name === evt.target.value);
+    const destination = this._destinations.find((item) => item.name === evt.target.value);
 
     if (!destination) {
       evt.target.setCustomValidity(`Choose a city from the list`);

@@ -34,7 +34,7 @@ const createSortTemplate = () => {
 </form>`;
 };
 
-export default class Sort extends Abstract {
+export default class TripSort extends Abstract {
   constructor(index) {
     super();
 

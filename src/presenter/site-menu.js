@@ -1,17 +1,17 @@
 import SiteMenuView from "../view/site-menu.js";
-import TripNewButton from "../view/new-trip-btn.js";
+import TripNewButtonView from "../view/trip-new-button.js";
 import {render, RenderPosition} from "../utils/render.js";
 import {MenuItem} from "../const.js";
 
 const {BEFOREEND} = RenderPosition;
 
-export default class SiteMenuPresenter {
+export default class SiteMenu {
   constructor(siteMenuContainer, siteMenuModel) {
     this._siteMenuContainer = siteMenuContainer;
     this._siteMenuModel = siteMenuModel;
 
     this._siteMenuComponent = new SiteMenuView();
-    this._newTripBtnComponent = new TripNewButton();
+    this._newTripBtnComponent = new TripNewButtonView();
 
     this._handleSiteMenuChange = this._handleSiteMenuChange.bind(this);
     this._handleNewEventBtnClick = this._handleNewEventBtnClick.bind(this);

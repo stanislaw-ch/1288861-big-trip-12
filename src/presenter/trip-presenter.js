@@ -1,10 +1,10 @@
-import TripNewButton from "../view/new-trip-btn.js";
-import TripBoard from "../view/trip-board.js";
-import TripDay from "../view/trip-day.js";
-import TripDaySort from "../view/trip-day-sort.js";
-import TripSort from "../view/trip-sort.js";
-import Statistics from "../view/statistics.js";
-import NoTripPoints from "../view/trip-no-points.js";
+import TripNewButtonView from "../view/trip-new-button.js";
+import TripBoardView from "../view/trip-board.js";
+import TripDayView from "../view/trip-day.js";
+import TripDaySortView from "../view/trip-day-sort.js";
+import TripSortView from "../view/trip-sort.js";
+import StatisticsView from "../view/statistics.js";
+import NoTripPointsView from "../view/no-trip-points.js";
 import LoadingView from "../view/loading.js";
 import PointPresenter, {State as PointPresenterViewState} from "./point.js";
 import PointNewPresenter from "./point-new.js";
@@ -14,6 +14,7 @@ import {sortTimeDown, sortPriceDown} from "../utils/points.js";
 import {filter} from "../utils/filter.js";
 import {MenuItem, SortType, UpdateType, UserAction, FilterType} from "../const.js";
 import moment from "moment";
+
 export default class TripPresenter {
   constructor(
       tripContainer,
@@ -38,11 +39,11 @@ export default class TripPresenter {
 
     this._statisticsComponent = null;
 
-    this._boardComponent = new TripBoard();
-    this._noPointsComponent = new NoTripPoints();
-    this._sortComponent = new TripSort();
+    this._boardComponent = new TripBoardView();
+    this._noPointsComponent = new NoTripPointsView();
+    this._sortComponent = new TripSortView();
     this._loadingComponent = new LoadingView();
-    this._newTripBtnComponent = new TripNewButton();
+    this._newTripBtnComponent = new TripNewButtonView();
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -176,7 +177,7 @@ export default class TripPresenter {
         this.destroy();
         const siteMainElement = document.querySelector(`.page-body__page-main`);
         const siteStatsElement = siteMainElement.querySelector(`.page-body__container`);
-        this._statisticsComponent = new Statistics(this._pointsModel.getPoints());
+        this._statisticsComponent = new StatisticsView(this._pointsModel.getPoints());
         render(siteStatsElement, this._statisticsComponent, RenderPosition.BEFOREEND);
         break;
       case MenuItem.ADD_NEW_EVENT:
@@ -240,7 +241,7 @@ export default class TripPresenter {
       .sort((elem1, elem2) => elem1 > elem2 ? 1 : -1));
 
     for (const date of sortDates) {
-      const dayComponent = new TripDay(date);
+      const dayComponent = new TripDayView(date);
 
       render(this._boardComponent, dayComponent, RenderPosition.BEFOREEND);
       const dayPointElement = dayComponent.getElement().querySelector(`.trip-events__list`);
@@ -252,7 +253,7 @@ export default class TripPresenter {
   }
 
   _renderPointsSort() {
-    const boardSortComponent = new TripDaySort();
+    const boardSortComponent = new TripDaySortView();
     render(this._boardComponent, boardSortComponent, RenderPosition.BEFOREEND);
 
     const boardSort = boardSortComponent.getElement().querySelector(`.trip-events__list`);

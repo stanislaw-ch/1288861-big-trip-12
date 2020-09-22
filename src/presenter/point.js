@@ -1,5 +1,5 @@
-import TripPoint from "../view/trip-point.js";
-import TripPointEdit from "../view/trip-edit.js";
+import TripPointView from "../view/trip-point.js";
+import TripPointEditView from "../view/trip-point-edit.js";
 import {render, RenderPosition, replace, remove} from "../utils/render.js";
 import {UserAction, UpdateType} from "../const.js";
 import {areDatesEqual} from "../utils/points.js";
@@ -15,7 +15,7 @@ export const State = {
   ABORTING: `ABORTING`
 };
 
-export default class PointPresenter {
+export default class Point {
   constructor(changeData, changeMode) {
     this._changeData = changeData;
     this._changeMode = changeMode;
@@ -39,8 +39,8 @@ export default class PointPresenter {
     const prevPointComponent = this._pointComponent;
     const prevPointEditComponent = this._pointEditComponent;
 
-    this._pointComponent = new TripPoint(pointItem);
-    this._pointEditComponent = new TripPointEdit(pointItem, offers, destination); //
+    this._pointComponent = new TripPointView(pointItem);
+    this._pointEditComponent = new TripPointEditView(pointItem, offers, destination); //
 
     this._pointComponent.setEditClickHandler(this._handleEditClick);
     this._pointEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);

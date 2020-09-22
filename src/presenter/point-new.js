@@ -1,9 +1,9 @@
-import PointAdd from "../view/trip-edit.js";
+import PointAddView from "../view/trip-point-edit.js";
 import TripDayContainer from "../view/trip-day-container.js";
 import {remove, render, RenderPosition} from "../utils/render.js";
 import {UserAction, UpdateType} from "../const.js";
 
-export default class PointNewPresenter {
+export default class PointNew {
   constructor(pointListContainer, changeData) {
     this._pointListContainer = pointListContainer;
     this._changeData = changeData;
@@ -24,7 +24,7 @@ export default class PointNewPresenter {
       return;
     }
 
-    this._pointAddComponent = new PointAdd(this._destroyCallback, offers, destination);
+    this._pointAddComponent = new PointAddView(this._destroyCallback, offers, destination);
     this._pointAddComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._pointAddComponent.setDeleteClickHandler(this._handleCancelClick);
 
